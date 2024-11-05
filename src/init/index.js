@@ -9,13 +9,14 @@
 // import { gameSessions } from '../sessions/sessions.js';
 // import { testAllConnections } from '../utils/db/testConnection.js';
 // import { loadGameAssets } from './assets.js';
+import DatabaseManager from '../managers/databaseManager.js';
 import { loadProtos } from './loadProtos.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const initServer = async () => {
   try {
-    await loadProtos();
-    // await testAllConnections(pools);
+    await loadProtos();    
+    await DatabaseManager.GetInstance().testAllDBConnection();
   } catch (e) {
     console.error(e);
     process.exit(1);
