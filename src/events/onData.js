@@ -7,13 +7,15 @@ export const onData = (socket) => async (data) => {
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
   const totalHeaderLength = config.packet.totalHeaderLength;
+  console.log(socket.buffer);
 
   while (socket.buffer.length >= totalHeaderLength) {
     try {
-      const { packetType, payloadData } = packetParser(socket.buffer);
+      const { packetType, payloadData } = packetParser(socket);
       console.log(packetType, payloadData);
       const handler = getHandlerByPacketType(packetType);
       await handler({ socket, payloadData });
+
       break;
     } catch (e) {
       handleError(socket, e);
