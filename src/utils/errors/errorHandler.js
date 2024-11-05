@@ -1,4 +1,3 @@
-import { createResponse } from '../response/createResponse.js';
 import { ErrorCodes } from './errorCodes.js';
 
 export const handleError = (socket, error) => {
@@ -16,7 +15,4 @@ export const handleError = (socket, error) => {
     message = error.message;
     console.error(`일반에러: ${error.message}`);
   }
-
-  const errorResponse = createResponse(-1, responseCode, { message }, null);
-  socket.write(errorResponse);
 };

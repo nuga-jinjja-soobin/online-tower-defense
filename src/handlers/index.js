@@ -5,11 +5,16 @@ import { PACKET_TYPE } from '../constants/header.js';
 import { registHandler } from './user/registHandler.js';
 import CustomError from '../utils/errors/customError.js';
 import { ErrorCodes } from '../utils/errors/errorCodes.js';
+import { loginHandler } from './user/loginHandler.js';
 
 const handlers = {
   [PACKET_TYPE.REGISTER_REQUEST]: {
     handler: registHandler,
     protoType: 'auth.C2SRegisterRequest',
+  },
+  [PACKET_TYPE.LOGIN_REQUEST]: {
+    handler: loginHandler,
+    protoType: 'auth.S2CLoginRequest',
   },
 };
 
