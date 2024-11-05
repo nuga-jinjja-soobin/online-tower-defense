@@ -1,0 +1,26 @@
+{
+  "name": "online-tower-defense",
+  "version": "1.0.0",
+  "description": "챕터 5. 온라인 타워 멀티 디펜스 프로젝트",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
+    "long": "^5.2.3",
+    "mysql2": "^3.11.3",
+    "nodemon": "^3.1.7",
+    "pg": "^8.13.1",
+    "prettier": "^3.3.3",
+    "protobufjs": "^7.4.0",
+    "uuid": "^11.0.2"
+  }
+}

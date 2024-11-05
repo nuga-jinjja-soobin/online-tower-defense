@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package gameEvent;
+
+/* 
+  기지 HP 업데이트, 게임 종료, 몬스터 사망 통지 패킷
+*/
+message S2CUpdateBaseHPNotification {
+    bool isOpponent = 1; // HP를 업데이트 할 기지가 상대방 기지라면 true
+    int32 baseHp = 2;
+}
+
+message S2CGameOverNotification {
+    bool isWin = 1; // 받는 플레이어가 승리했으면 true
+}
+
+message C2SGameEndRequest {
+}
+
+message C2SMonsterDeathNotification {
+    int32 monsterId = 1;
+}
+
+message S2CEnemyMonsterDeathNotification {
+    int32 monsterId = 1;
+}

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package match;
+
+/* 
+  매칭 및 게임 상태 동기화
+*/
+message C2SMatchRequest {
+}
+
+message S2CMatchStartNotification {
+    InitialGameState initialGameState = 1;
+    GameState playerData = 2;
+    GameState opponentData = 3;
+}
+
+message S2CStateSyncNotification {
+    int32 userGold = 1;
+    int32 baseHp = 2;
+    int32 monsterLevel = 3;
+    int32 score = 4;
+    repeated TowerData towers = 5;
+    repeated MonsterData monsters = 6;
+}
