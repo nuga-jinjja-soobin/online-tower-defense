@@ -6,6 +6,7 @@ import { registHandler } from './user/registHandler.js';
 import CustomError from '../utils/errors/customError.js';
 import { ErrorCodes } from '../utils/errors/errorCodes.js';
 import { loginHandler } from './user/loginHandler.js';
+import { matchHandler } from './game/matchHandler.js';
 
 const handlers = {
   [PACKET_TYPE.REGISTER_REQUEST]: {
@@ -15,6 +16,10 @@ const handlers = {
   [PACKET_TYPE.LOGIN_REQUEST]: {
     handler: loginHandler,
     protoType: 'auth.S2CLoginRequest',
+  },
+  [PACKET_TYPE.MATCH_REQUEST]: {
+    handler: matchHandler,
+    protoType: 'match.C2SMatchRequest',
   },
 };
 
