@@ -3,12 +3,16 @@
  * 2. 연결 수립 후 이벤트에 따른 처리 로직 나열
  * 3. data, end, error 3개로 받을 예정
  */
+import { initialHandler } from '../handlers/connect/initialHandler.js';
 import { onData } from './onData.js';
 import { onEnd } from './onEnd.js';
 import { onError } from './onError.js';
 
 export const onConnection = (socket) => {
   console.log(`Client connected from: ${socket.remoteAddress}:${socket.remotePort}`);
+
+  // 소켓에 대한 유저 세션 초기화 작업
+  initialHandler(socket);
 
   // 각 클라이언트마다 고유의 버퍼를 유지하기 위해 빈 버퍼 생성
   socket.buffer = Buffer.alloc(0);
