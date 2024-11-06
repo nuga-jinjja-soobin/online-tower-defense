@@ -17,7 +17,7 @@ export const packetParser = (socket) => {
   offset += config.packet.versionLength; // 1
 
   // 4. 클라이언트 버전 (versionLength bytes)
-  const version = socket.buffer.slice(offset, offset + versionLength).toString('utf-8');
+  const version = socket.buffer.subarray(offset, offset + versionLength).toString('utf-8');
   offset += versionLength;
   // 4-1. 버전이 일치하는지 검증
   if (version !== config.client.version) {
@@ -39,7 +39,7 @@ export const packetParser = (socket) => {
   offset += config.packet.payloadLength;
 
   // 7. 페이로드 (payloadLength bytes)
-  const payload = socket.buffer.slice(offset, offset + payloadLength);
+  const payload = socket.buffer.subarray(offset, offset + payloadLength);
 
   console.log(`Packet Type: ${packetType}`);
   console.log(`Version Length: ${versionLength}`);
@@ -69,8 +69,7 @@ export const packetParser = (socket) => {
   // 설정된 `oneof` 필드명을 가져옴
   for (const key in payloadData) {
     if (payloadData.hasOwnProperty(key) && typeof payloadData[key] === 'object') {
-      socket.buffer = socket.buffer.subarray(offset);
-      return { packetType, payloadData: payloadData[key] };
+      return { packetType, payloadData: payloadData[key], offset: offset + payloadLength };
     }
   }
 };
