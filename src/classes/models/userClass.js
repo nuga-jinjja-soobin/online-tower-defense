@@ -1,7 +1,18 @@
-class User {
-  constructor(id, sequence) {
+export class User {
+  constructor(socket) {
+    this.socket = socket;
+    this.id = '';
+    this.sequence = 0;
+    this.match = false; // 게임 매칭중인지 상태 확인을 위한 속성
+  }
+
+  loginedUser(id) {
     this.id = id;
-    this.sequence = sequence;
+  }
+
+  onMatch() {
+    console.log(`${this.id} 가 매칭을 시작합니다.`);
+    this.match = true;
   }
 
   incrementSequence() {
