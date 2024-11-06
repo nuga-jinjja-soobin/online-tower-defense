@@ -2,9 +2,9 @@ import { USER_STATE } from '../../constants/state.js';
 import Match from './matchClass.js';
 
 export class User {
-  constructor(socket) {
+  constructor(socket, id) {
     this.socket = socket;
-    this.id = '';
+    this.id = id;
     this.gameSessionId = '';
     this.sequence = 0;
     this.state = USER_STATE.STAY; // 게임 매칭중인지 상태 확인을 위한 속성
