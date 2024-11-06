@@ -10,13 +10,15 @@
 // import { testAllConnections } from '../utils/db/testConnection.js';
 // import { loadGameAssets } from './assets.js';
 import DatabaseManager from '../managers/databaseManager.js';
+import { loadGameAssets } from './loadAssets.js';
 import { loadProtos } from './loadProtos.js';
-import { v4 as uuidv4 } from 'uuid';
 
 const initServer = async () => {
   try {
-    await loadProtos();    
+    await loadGameAssets();
+    await loadProtos();
     await DatabaseManager.GetInstance().testAllDBConnection();
+    // 더미 유저 생성 함수 구현필요.
   } catch (e) {
     console.error(e);
     process.exit(1);
