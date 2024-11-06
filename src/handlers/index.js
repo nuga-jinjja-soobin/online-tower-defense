@@ -7,6 +7,7 @@ import CustomError from '../utils/errors/customError.js';
 import { ErrorCodes } from '../utils/errors/errorCodes.js';
 import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
+import { spawnMonsterHandler } from './monster/spawnMonsterHandler.js';
 
 const handlers = {
   [PACKET_TYPE.REGISTER_REQUEST]: {
@@ -20,6 +21,10 @@ const handlers = {
   [PACKET_TYPE.MATCH_REQUEST]: {
     handler: matchHandler,
     protoType: 'match.C2SMatchRequest',
+  },
+  [PACKET_TYPE.SPAWN_MONSTER_RESPONSE]: {
+    handler: spawnMonsterHandler,
+    protoType: 'combat.S2CSpawnMonsterResponse',
   },
 };
 
