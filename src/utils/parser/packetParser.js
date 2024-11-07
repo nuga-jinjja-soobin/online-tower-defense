@@ -3,6 +3,7 @@ import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import CustomError from '../errors/customError.js';
 import { ErrorCodes } from '../errors/errorCodes.js';
+import { validateSequence } from '../socket/sequence.js';
 
 export const packetParser = (socket) => {
   // 1. 패킷 타입 길이만큼 버퍼 읽을 위치 지정
@@ -32,7 +33,10 @@ export const packetParser = (socket) => {
   // 현재 소켓의 유저를 유저세션에서 검색하여 sequence 검증 확인
   const sequence = socket.buffer.readUInt32BE(offset);
   offset += config.packet.sequenceLength;
-  // getUserBySocket(socket) => user.validateSequence();
+  const isValidSequence = validateSequence(socket, sequence);
+  if (!isValidSequence) {
+    throw (new CustomError(ErrorCodes.INVALID_SEQUENCE), '패킷이 중복되거나 누락되었습니다.');
+  }
 
   // 6. 페이로드 길이 (4 bytes)
   const payloadLength = socket.buffer.readUInt32BE(offset);
@@ -69,7 +73,11 @@ export const packetParser = (socket) => {
   // 설정된 `oneof` 필드명을 가져옴
   for (const key in payloadData) {
     if (payloadData.hasOwnProperty(key) && typeof payloadData[key] === 'object') {
-      return { packetType, payloadData: payloadData[key], offset: offset + payloadLength };
+      return {
+        packetType,
+        payload: payloadData[key],
+        offset: offset + payloadLength,
+      };
     }
   }
 };
