@@ -1,8 +1,7 @@
 export class Monster {
   constructor(id) {
-    this.id = id;
-
-    this.monsterNum = Math.floor(Math.random() * 10) + 1; // 1 ~ 5 생성
+    this.monsterId = id;
+    this.monsterNumber = Math.floor(Math.random() * 5) + 1; // 1 ~ 5 생성
     this.level = 1;
     this.die = false;
   }
