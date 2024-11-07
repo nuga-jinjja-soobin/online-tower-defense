@@ -1,10 +1,14 @@
 import { MAX_PLAYER_TO_GAME_SESSIONS } from '../../constants/env.js';
+import { Monster } from './monsterClass.js';
 
 export class Game {
   constructor(id) {
     this.id = id;
     this.users = [];
-    this.gameData = [];
+    this.gameData = {};
+    this.monsters = [];
+    this.monstersDie = [];
+    this.monsterId = 0;
     this.state = 'waiting';
   }
 
@@ -19,7 +23,22 @@ export class Game {
     }
   }
 
-  spawnMonster() {}
+  spawnMonster(socket) {
+    const monster = new Monster(this.monsterId++);
+    if (!this.gameData[socket].mosters) {
+      this.gameData[socket].monsters = [];
+    }
+    this.monsters.push(monster);
+
+    return monster;
+  }
+
+  dieMonsterCheck(monsterId) {
+    const dieMonster = this.monsters.find((monster) => monster.id === monsterId);
+    dieMonster.monsterDie();
+    this.monstersDie.push(dieMonster);
+    return dieMonster;
+  }
 
   initialTower() {}
   //수빈님 타워부분// 너무 혼자 다 하시는 거 같아요// 아 타워 데이터요? 코드말고?
