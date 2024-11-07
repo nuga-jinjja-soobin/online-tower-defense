@@ -7,6 +7,7 @@ import { ErrorCodes } from '../../utils/errors/errorCodes.js';
 import { config } from '../../config/config.js';
 import JWT from 'jsonwebtoken';
 import { addUser, getUserById } from '../../sessions/userSessions.js';
+import bcrypt from 'bcrypt';
 
 export const loginHandler = async ({ socket, payload }) => {
   try {
@@ -23,7 +24,8 @@ export const loginHandler = async ({ socket, payload }) => {
         socket.sequence,
       );
     }
-    if (user.password !== password) {
+
+    if (!bcrypt.compare(password, user.password)) {
       throw new CustomError(
         ErrorCodes.USER_NOT_FOUND,
         `${id}의 비밀번호가 일치하지 않습니다.`,
