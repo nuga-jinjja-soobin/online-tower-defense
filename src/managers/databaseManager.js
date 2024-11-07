@@ -1,10 +1,9 @@
 import mysql from 'mysql2/promise';
-import fs from 'fs';
 import { config } from '../config/config.js';
 import { formatDate } from '../utils/dateFormatter.js';
 import { USER_SQL_QUERIES } from '../database/query/user/user.queries.js';
-import { v4 as uuidv4 } from 'uuid';
 
+// 싱글턴
 class DatabaseManager {
   static gInstance = null;
   pools = {};
@@ -71,14 +70,23 @@ class DatabaseManager {
     return rows[0];
   }
 
+  async findUserByEmail(email) {
+    const [rows] = await this.pools['USER_DB'].query(USER_SQL_QUERIES.FIND_USER_BY_EMAIL, [email]);
+    return rows[0];
+  }
+
+  async findUser(id, email) {
+    const [rows] = await this.pools['USER_DB'].query(USER_SQL_QUERIES.FIND_USER, [id, email]);
+    return rows[0];
+  }
+
   async createUser(id, email, password) {
     await this.pools['USER_DB'].query(USER_SQL_QUERIES.CREATE_USER, [id, email, password]);
-
     return { id, email, password };
   }
 
-  updateUserLogin(id) {
-    this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
+  async updateUserLogin(id) {
+    await this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
   }
 }
 
