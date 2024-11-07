@@ -7,6 +7,7 @@ import { getRandomPositionNearPath } from '../../handlers/tower/towerHandler.js'
 import { createResponse } from '../../utils/response/createResponse.js';
 import Tower from './towerClass.js';
 import { getGameAssets } from '../../init/loadAssets.js';
+import { PACKET_TYPE } from '../../constants/header.js';
 
 export class Game {
   constructor(id) {
@@ -141,14 +142,14 @@ export class Game {
   addEnemyTowerNotification(socket, x, y, towerId) {
     const ResponsePacket = createResponse(
       PACKET_TYPE.ADD_ENEMY_TOWER_NOTIFICATION,
-      'addEnemyTowerNotification',
       {
         towerId,
         x,
         y,
       },
+      socket.sequence,
     );
-    const responseUser = users.find((user) => user.socket !== socket);
+    const responseUser = this.users.find((user) => user.socket !== socket);
     responseUser.socket.write(ResponsePacket);
   }
 
@@ -158,13 +159,13 @@ export class Game {
     const monsterId = payloadData.monsterId;
     const ResponsePacket = createResponse(
       PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
-      'enemyTowerAttackNotification',
       {
         towerId,
         monsterId,
       },
+      socket.sequence,
     );
-    const responseUser = users.find((user) => user.socket !== socket);
+    const responseUser = this.users.find((user) => user.socket !== socket);
     responseUser.socket.write(ResponsePacket);
   }
 }
