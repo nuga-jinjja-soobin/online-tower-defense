@@ -1,9 +1,7 @@
 import mysql from 'mysql2/promise';
-import fs from 'fs';
 import { config } from '../config/config.js';
 import { formatDate } from '../utils/dateFormatter.js';
 import { USER_SQL_QUERIES } from '../database/query/user/user.queries.js';
-import { v4 as uuidv4 } from 'uuid';
 
 // 싱글턴
 class DatabaseManager {
@@ -87,8 +85,8 @@ class DatabaseManager {
     return { id, email, password };
   }
 
-  updateUserLogin(id) {
-    this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
+  async updateUserLogin(id) {
+    await this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
   }
 }
 

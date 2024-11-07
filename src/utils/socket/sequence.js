@@ -5,7 +5,6 @@ export const validateSequence = (socket, reciveSequence) => {
   const expectedSequence = socket.sequence + 1;
   if (expectedSequence === reciveSequence) {
     socket.sequence = reciveSequence;
-    socket.sequence++;
     return true;
   }
 
