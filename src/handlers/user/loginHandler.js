@@ -16,7 +16,7 @@ export const loginHandler = async ({ socket, payloadData }) => {
 
     // 동일한 유저가 접속중인지 확인
     const sessionUser = getUserById(id);
-    console.log(sessionUser);
+    // console.log(sessionUser);
     if (sessionUser) {
       throw new CustomError(
         ErrorCodes.DUPLICATED_USER_CONNECT,

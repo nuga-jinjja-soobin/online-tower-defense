@@ -1,5 +1,4 @@
 import { USER_STATE } from '../../constants/state.js';
-import Match from './matchClass.js';
 
 export class User {
   constructor(socket, id) {

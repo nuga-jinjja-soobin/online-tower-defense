@@ -5,5 +5,5 @@ export const USER_SQL_QUERIES = {
 
   CREATE_USER: `INSERT INTO users (userId, email, password) VALUES (?, ?, ?)`,
 
-  UPDATE_USER_LOGIN: `UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE userId = ?`,
+  UPDATE_USER_LOGIN: `UPDATE users SET lastLogin = CURRENT_TIMESTAMP WHERE userId = ?`,
 };

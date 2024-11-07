@@ -5,6 +5,13 @@
     "baseHp": 200,
     "towerCost": 3000,
     "initalGold": 300,
-    "monsterSpawnInterval": 4000
+    "monsterSpawnInterval": 5000,
+    "initalTowerCount": 3,
+    "score": 0,
+    "basePosition": {
+      "x": 1500,
+      "y": 500
+    },
+    "monsterLevel": 1
   }
 }
