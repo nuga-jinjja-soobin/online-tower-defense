@@ -25,7 +25,7 @@ export const loginHandler = async ({ socket, payload }) => {
       );
     }
 
-    if (!bcrypt.compare(password, user.password)) {
+    if (!(await bcrypt.compare(password, user.password))) {
       throw new CustomError(
         ErrorCodes.USER_NOT_FOUND,
         `${id}의 비밀번호가 일치하지 않습니다.`,
