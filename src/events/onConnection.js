@@ -12,6 +12,9 @@ export const onConnection = (socket) => {
 
   // 각 클라이언트마다 고유의 버퍼를 유지하기 위해 빈 버퍼 생성
   socket.buffer = Buffer.alloc(0);
+  // 각 클라이언트의 패킷순서를 보장하기 위한 순서 생성
+  socket.sequence = 0;
+  console.log(socket.sequence);
 
   socket.on('data', onData(socket));
   socket.on('end', onEnd(socket));
