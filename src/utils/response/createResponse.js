@@ -1,31 +1,40 @@
 /** 클라이언트에 응답을 해주기 위한 패킷을 생성해주는 스크립트 */
+import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
+import { PACKET_MAPS } from '../../protobufs/packetMaps.js';
 
-export const createResponse = (packetType, payloadMessage, payloadData = {}) => {
-  const protoMessages = getProtoMessages();
-
-  const gamePacket = protoMessages.packet.GamePacket;
-
-  const responsePayload = {};
-
-  responsePayload[payloadMessage] = payloadData;
-  console.log(`responsePayload: `, responsePayload);
-
-  const payload = gamePacket.encode(responsePayload).finish();
-  console.log(`payload: `, payload);
-
-  const type = Buffer.alloc(2);
-  type.writeUInt16BE(packetType);
-
-  const versionString = '1.0.0';
+export const createResponse = (packetType, payloadData = {}, sequence) => {
+  // 1. 패킷 타입
+  const typeBuffer = Buffer.alloc(config.packet.typeLength);
+  typeBuffer.writeUInt16BE(packetType);
+  // 2. 버전
+  const versionLengthBuffer = Buffer.alloc(config.packet.versionLength);
+  versionLengthBuffer.writeUInt8(config.client.version.length); // 문자열 길이 기록
+  // 3. 버전 스트링 길이
+  const versionString = config.client.version;
   const versionBuffer = Buffer.from(versionString, 'utf-8');
-  const versionLength = Buffer.alloc(1);
-  versionLength.writeUInt8(versionBuffer.length); // 문자열 길이 기록
+  // 4. 패킷순서
+  const sequenceBuffer = Buffer.alloc(config.packet.sequenceLength);
+  sequenceBuffer.writeUInt32BE(sequence); // 예시로 시퀀스 번호 0으로 기록
 
-  const sequence = Buffer.alloc(4);
-  sequence.writeUInt32BE(1); // 예시로 시퀀스 번호 0으로 기록
-  const dataLength = Buffer.alloc(4);
-  dataLength.writeUInt32BE(payload.length);
+  const protoMessages = getProtoMessages();
+  const gamePacket = protoMessages.packet.GamePacket;
+  const responsePayload = {};
+  responsePayload[PACKET_MAPS[packetType]] = payloadData;
+  console.log(`responsePayload: `, responsePayload);
+  const payloadBuffer = gamePacket.encode(responsePayload).finish();
+  console.log(`payload: `, payloadBuffer);
 
-  return Buffer.concat([type, versionLength, versionBuffer, sequence, dataLength, payload]);
+  // 6. 페이로드 길이
+  const payloadLengthBuffer = Buffer.alloc(config.packet.payloadLength);
+  payloadLengthBuffer.writeUInt32BE(payloadBuffer.length);
+
+  return Buffer.concat([
+    typeBuffer,
+    versionLengthBuffer,
+    versionBuffer,
+    sequenceBuffer,
+    payloadLengthBuffer,
+    payloadBuffer,
+  ]);
 };

@@ -11,13 +11,12 @@ export const onData = (socket) => async (data) => {
 
   while (socket.buffer.length >= totalHeaderLength) {
     try {
-      const { packetType, payloadData, offset } = packetParser(socket);
+      const { packetType, payload, offset } = packetParser(socket);
 
       socket.buffer = socket.buffer.subarray(offset);
-      console.log(packetType, payloadData);
+      console.log(packetType, payload);
       const handler = getHandlerByPacketType(packetType);
-      await handler({ socket, payloadData });
-
+      await handler({ socket, payload });
       break;
     } catch (e) {
       handleError(socket, e);
