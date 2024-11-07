@@ -23,7 +23,7 @@ const handlers = {
     handler: matchHandler,
     protoType: 'match.C2SMatchRequest',
   },
-  [PACKET_TYPE.SPAWN_MONSTER_RESPONSE]: {
+  [PACKET_TYPE.SPAWN_MONSTER_REQUEST]: {
     handler: spawnMonsterHandler,
     protoType: 'combat.S2CSpawnMonsterResponse',
   },
