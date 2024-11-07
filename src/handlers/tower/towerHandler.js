@@ -2,7 +2,11 @@ import { PACKET_TYPE } from '../../constants/header.js';
 import { getGameSession } from '../../sessions/gameSession.js';
 import { getUserBySocket } from '../../sessions/userSessions.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-
+const loginResponsePacket = createResponse(
+  PACKET_TYPE.LOGIN_RESPONSE,
+  successPayloadData,
+  socket.sequence,
+);
 export const towerPurchaseHandler = ({ socket, payloadData }) => {
   console.log(`C2STowerPurchase 작동 완료.`);
   const x = payloadData.x;
@@ -13,14 +17,15 @@ export const towerPurchaseHandler = ({ socket, payloadData }) => {
 
   // 게임 클래스의 addTower실행 생성된 타워 데이터 반환
   const tower = gameSession.addTower(socket, x, y);
+  const towerData = {
+    towerId: tower.towerId,
+  };
 
   // 타워구매 패킷 작성
   const ResponsePacket = createResponse(
     PACKET_TYPE.TOWER_PURCHASE_RESPONSE,
-    'towerPurchaseResponse',
-    {
-      towerId: tower.towerId,
-    },
+    towerData,
+    socket.sequence,
   );
 
   // 소켓에 작성

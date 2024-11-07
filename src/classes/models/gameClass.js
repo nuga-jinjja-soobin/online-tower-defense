@@ -69,14 +69,15 @@ export class Game {
 
   //타워 구입 적에게 정보 전송
   addEnemyTowerNotification(socket, x, y, towerId) {
+    const towerData = {
+      towerId,
+      x,
+      y,
+    };
     const ResponsePacket = createResponse(
       PACKET_TYPE.ADD_ENEMY_TOWER_NOTIFICATION,
-      'addEnemyTowerNotification',
-      {
-        towerId,
-        x,
-        y,
-      },
+      towerData,
+      socket.sequence,
     );
     const responseUser = users.find((user) => user.socket !== socket);
     responseUser.socket.write(ResponsePacket);
@@ -86,13 +87,14 @@ export class Game {
   enemyTowerAttackNotification(socket, payloadData) {
     const towerId = payloadData.towerId;
     const monsterId = payloadData.monsterId;
+    const towerData = {
+      towerId,
+      monsterId,
+    };
     const ResponsePacket = createResponse(
       PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
-      'enemyTowerAttackNotification',
-      {
-        towerId,
-        monsterId,
-      },
+      towerData,
+      socket.sequence,
     );
     const responseUser = users.find((user) => user.socket !== socket);
     responseUser.socket.write(ResponsePacket);
