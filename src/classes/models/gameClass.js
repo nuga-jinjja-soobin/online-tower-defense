@@ -1,6 +1,6 @@
 import { MAX_PLAYER_TO_GAME_SESSIONS } from '../../constants/env.js';
 import { GAME_STATE } from '../../constants/state.js';
-import { createUserInitialData } from '../../utils/game/data/createData.js';
+import { createUserInitialData, createUserData } from '../../utils/game/data/createData.js';
 import { Monster } from './monsterClass.js';
 import { generateRandomMonsterPath } from '../../handlers/monster/monsterPath.js';
 import { getRandomPositionNearPath } from '../../handlers/tower/towerHandler.js';
@@ -51,51 +51,11 @@ export class Game {
     // 주어진 소켓 ID가 아닌 상대 플레이어 찾기
     const opponentUser = this.users.find((user) => user.socket !== socket);
 
-    // 사용자의 gameData를 생성하는 함수
-    const createUserData = (socket) => {
-      // towers, monsters 각 인스턴스에서 필요한 값만 매핑
-      let towersData = [];
-      for (let i in this.gameData[socket].towers) {
-        const towerId = this.gameData[socket].towers[i].towerId;
-        const x = this.gameData[socket].towers[i].x;
-        const y = this.gameData[socket].towers[i].y;
-        towersData.push({ towerId, x, y });
-      }
-      let monsterData = [];
-      for (let i in this.gameData[socket].monsters) {
-        const monsterId = this.gameData[socket].monsters[i].monsterId;
-        const monsterNumber = this.gameData[socket].monsters[i].monsterNumber;
-        const level = this.gameData[socket].monsters[i].level;
-        monsterData.push({ monsterId, monsterNumber, level });
-      }
-
-      const data = {
-        gold: this.gameData[socket].gold,
-        base: this.gameData[socket].baseData,
-        highScore: this.gameData[socket].highScore,
-        towers: towersData,
-        monsters: monsterData,
-        monsterLevel: this.gameData[socket].monsterLevel,
-        score: this.gameData[socket].score,
-        monsterPath: this.gameData[socket].monsterPath,
-        basePosition: this.gameData[socket].basePosition,
-      };
-
-      return data;
-    };
-
     // 현재 사용자와 상대방의 데이터를 가져옴
-    const userData = createUserData(socket);
-    const opponentData = createUserData(opponentUser);
+    const userData = createUserData(this.gameData, socket);
+    const opponentData = createUserData(this.gameData, opponentUser.socket);
 
     return [userData, opponentData];
-  }
-
-  // 초기 게임 데이터를 생성하는 메서드
-  createInitData() {
-    const data = createGameStateData();
-    this.gameData[this.users[0].id] = data;
-    this.gameData[this.users[1].id] = data;
   }
 
   // gameData.socket.monsters에 몬스터 추가
