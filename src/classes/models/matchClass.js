@@ -43,7 +43,7 @@ class Match {
     this.matchingLoopRunning = true;
 
     while (this.users.length > 0) {
-      for (const user of [...this.users]) {
+      for (const user of this.users) {
         // 복사본을 사용하여 안전하게 루프 돌기
         if (user.state === USER_STATE.MATCHING) {
           const matchedUser = this.findmatchedUser(user);
@@ -65,8 +65,6 @@ class Match {
             // gameSession.users.push(user, matchedUser);
             gameSession.addUser(user);
             gameSession.addUser(matchedUser);
-            user.gameSessionId = gameSession.id;
-            matchedUser.gameSession = gameSession.id;
 
             const userCallback = this.matchCallbacks.get(user.socket);
             const matchedUserCallback = this.matchCallbacks.get(matchedUser.socket);

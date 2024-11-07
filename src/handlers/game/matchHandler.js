@@ -2,13 +2,14 @@ import { getUserBySocket } from '../../sessions/userSessions.js';
 import CustomError from '../../utils/errors/customError.js';
 import { ErrorCodes } from '../../utils/errors/errorCodes.js';
 import Match from '../../classes/models/matchClass.js';
-import { createGameStateData, createInitialGameData } from '../../utils/data/createData.js';
+import { createInitialGameData } from '../../utils/game/data/createData.js';
 import { getGameSession } from '../../sessions/gameSession.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
 export const matchHandler = async ({ socket, payload }) => {
   console.log('Match Handler 작동.');
+  const sequence = socket.sequence;
 
   // 유저 세션 확인 및 매칭 상태 변경 및 매치메이킹 서버로 진입
   const user = getUserBySocket(socket);
@@ -24,21 +25,18 @@ export const matchHandler = async ({ socket, payload }) => {
   const onMatchSuccess = (response) => {
     // 일단 임시로 만든 더미 GameState를 가져올 예정
     const gameSession = getGameSession(response.gameSessionId);
-
-    gameSession.createInitData();
-
     const initialGameState = createInitialGameData();
-    const playerData = gameSession.gameData[gameSession.users[0].id];
-    const opponentData = gameSession.gameData[gameSession.users[1].id];
+    const [playerData, opponentData] = gameSession.getGameData(socket);
+    console.log(playerData, opponentData);
 
     const S2CMatchStartNotificationResponse = createResponse(
       PACKET_TYPE.MATCH_START_NOTIFICATION,
-      'matchStartNotification',
       {
         initialGameState,
         playerData,
         opponentData,
       },
+      sequence,
     );
 
     console.log(response);

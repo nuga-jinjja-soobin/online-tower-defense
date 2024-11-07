@@ -8,11 +8,6 @@ export class User {
     this.state = USER_STATE.STAY; // 게임 매칭중인지 상태 확인을 위한 속성
   }
 
-  joinedGameSession(gameSession) {
-    this.gameSessionId = gameSession.id;
-    this.state = USER_STATE.INGAME;
-  }
-
   loginedUser(id) {
     this.id = id;
   }
