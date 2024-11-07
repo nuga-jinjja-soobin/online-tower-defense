@@ -1,5 +1,9 @@
 import { MAX_PLAYER_TO_GAME_SESSIONS } from '../../constants/env.js';
 import { Monster } from './monsterClass.js';
+import { generateRandomMonsterPath } from '../../handlers/monster/monsterPath.js';
+import { getRandomPositionNearPath } from '../../handlers/tower/towerHandler.js';
+import { createResponse } from '../../utils/response/createResponse.js';
+import Tower from './towerClass.js';
 
 export class Game {
   constructor(id) {
@@ -9,6 +13,8 @@ export class Game {
     this.monsters = [];
     this.monstersDie = [];
     this.monsterId = 0;
+    this.towerId = 0;
+    this.towerCount = 3;
     this.state = 'waiting';
   }
 
@@ -38,6 +44,58 @@ export class Game {
     dieMonster.monsterDie();
     this.monstersDie.push(dieMonster);
     return dieMonster;
+  }
+
+  //타워 추가
+  addTower(socket, x, y) {
+    const tower = new Tower(x, y, this.towerId);
+    this.towerId++;
+    if (!this.gameData[socket].towers) {
+      this.gameData[socket].towers = [];
+    }
+    this.gameData[socket].towers.push(tower);
+
+    return tower;
+  }
+
+  //몬스터path 생성 및 초기 타워 생성
+  addPath(socket) {
+    const path = generateRandomMonsterPath();
+    this.gameData[socket].paths = [...path];
+    for (let i = 0; i < this.towerCount; i++) {
+      getRandomPositionNearPath(socket, path);
+    }
+  }
+
+  //타워 구입 적에게 정보 전송
+  addEnemyTowerNotification(socket, x, y, towerId) {
+    const ResponsePacket = createResponse(
+      PACKET_TYPE.ADD_ENEMY_TOWER_NOTIFICATION,
+      'addEnemyTowerNotification',
+      {
+        towerId,
+        x,
+        y,
+      },
+    );
+    const responseUser = users.find((user) => user.socket !== socket);
+    responseUser.socket.write(ResponsePacket);
+  }
+
+  //타워 공격 적에게 정보 전송
+  enemyTowerAttackNotification(socket, payloadData) {
+    const towerId = payloadData.towerId;
+    const monsterId = payloadData.monsterId;
+    const ResponsePacket = createResponse(
+      PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
+      'enemyTowerAttackNotification',
+      {
+        towerId,
+        monsterId,
+      },
+    );
+    const responseUser = users.find((user) => user.socket !== socket);
+    responseUser.socket.write(ResponsePacket);
   }
 
   initialTower() {}
