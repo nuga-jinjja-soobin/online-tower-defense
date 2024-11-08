@@ -11,6 +11,7 @@
 // import { loadGameAssets } from './assets.js';
 import DatabaseManager from '../managers/databaseManager.js';
 import { loadGameAssets } from './loadAssets.js';
+import { loadPacketTypeHandlers } from './loadProcessInitializer.js';
 import { loadProtos } from './loadProtos.js';
 
 const initServer = async () => {
@@ -18,6 +19,7 @@ const initServer = async () => {
     await loadGameAssets();
     await loadProtos();
     await DatabaseManager.GetInstance().testAllDBConnection();
+    await loadPacketTypeHandlers();
     // 더미 유저 생성 함수 구현필요.
   } catch (e) {
     console.error(e);

@@ -11,7 +11,7 @@ export const towerPurchaseHandler = ({ socket, payload }) => {
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(user.gameSessionId);
   // 게임 클래스의 addTower실행 생성된 타워 데이터 반환
-  const tower = gameSession.addTower(socket, x, y);
+  const tower = gameSession.addTower(socket.userId, x, y);
   const towerData = {
     towerId: tower.towerId,
   };

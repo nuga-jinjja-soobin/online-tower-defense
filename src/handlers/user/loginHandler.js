@@ -35,7 +35,6 @@ export const loginHandler = async ({ socket, payload }) => {
 
     // 2. 동일한 유저가 접속중인지 확인
     let sessionUser = getUserById(id);
-    console.log(sessionUser);
     if (sessionUser) {
       throw new CustomError(
         ErrorCodes.DUPLICATED_USER_CONNECT,
@@ -46,6 +45,7 @@ export const loginHandler = async ({ socket, payload }) => {
 
     // 3. 유저 세션에 해당 유저 추가
     sessionUser = addUser(socket, id);
+    socket.userId = id;
 
     // 4. JWT 토큰 생성
     const userJWT = JWT.sign(user, config.jwt.key, { expiresIn: config.jwt.expires });

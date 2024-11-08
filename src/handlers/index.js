@@ -43,7 +43,7 @@ const handlers = {
 };
 
 export const getHandlerByPacketType = (PacketType) => {
-  console.log(PacketType);
+  // console.log(PacketType);
   if (!handlers[PacketType]) {
     throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, '핸들러 아이디를 찾을 수 없습니다.');
   }

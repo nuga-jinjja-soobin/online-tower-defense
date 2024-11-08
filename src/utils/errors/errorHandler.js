@@ -1,7 +1,7 @@
 import { createResponse } from '../response/createResponse.js';
 import { ErrorCodes } from './errorCodes.js';
 
-export const handleError = (socket, error, data) => {
+export const handleError = (socket, error, data = null) => {
   let responseCode;
   let message;
   if (error.code) {
@@ -13,6 +13,9 @@ export const handleError = (socket, error, data) => {
     message = error.message;
     console.error(`일반에러: ${error.message}`);
   }
-  const responsePacket = createResponse(data.packetType, data.failPayloadData, socket.sequence);
-  socket.write(responsePacket);
+
+  if (data) {
+    const responsePacket = createResponse(data.packetType, data.failPayloadData, socket.sequence);
+    socket.write(responsePacket);
+  }
 };

@@ -12,7 +12,7 @@ export const spawnMonsterHandler = ({ socket, payload }) => {
     // 유저가 참여한 세션 검색 (검증 추가 필요)
     const gameSession = getGameSession(user.gameSessionId);
 
-    const monster = gameSession.spawnMonster(socket);
+    const monster = gameSession.spawnMonster(socket.userId);
 
     // 현재 소켓의 몬스터 중 랜덤으로 보내준다.
     const spawnMonsterPacket = createResponse(

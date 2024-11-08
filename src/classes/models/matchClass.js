@@ -14,10 +14,10 @@ class Match {
   constructor() {}
 
   static GetInstance() {
-    if (Match.gInstance === null) {
-      Match.gInstance = new Match();
+    if (this.gInstance === null) {
+      this.gInstance = new Match();
     }
-    return Match.gInstance;
+    return this.gInstance;
   }
 
   joinedMatchUser(user, callback) {

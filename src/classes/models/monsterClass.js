@@ -13,4 +13,8 @@ export class Monster {
   monsterDie() {
     this.die = true;
   }
+
+  getMonsterData() {
+    return { monsterId: this.monsterId, monsterNumber: this.monsterNumber, level: this.level };
+  }
 }
