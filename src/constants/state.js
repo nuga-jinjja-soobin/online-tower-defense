@@ -4,3 +4,9 @@ export const USER_STATE = {
   MATCHING: 1,
   INGAME: 2,
 };
+
+export const GAME_STATE = {
+  STAY: 0,
+  PLAY: 1,
+  END: 2,
+};
