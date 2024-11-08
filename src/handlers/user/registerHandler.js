@@ -3,7 +3,7 @@ import { PACKET_TYPE } from '../../constants/header.js';
 import DatabaseManager from '../../managers/databaseManager.js';
 import bcrypt from 'bcrypt';
 
-export const registHandler = async ({ socket, payload }) => {
+export const registerHandler = async ({ socket, payload }) => {
   console.log(`registHandler 작동 완료.`);
   console.log('payload', payload);
 
@@ -15,8 +15,8 @@ export const registHandler = async ({ socket, payload }) => {
   // 유저 검색
   let user = await DatabaseManager.GetInstance().findUser(payload.id, payload.email);
 
+  // 유저가 없다면 회원가입 진행
   if (user === undefined) {
-    // 유저가 없다면 회원가입 진행
     DatabaseManager.GetInstance().createUser(payload.id, payload.email, hashPassword);
 
     registerResponsePayloadData.success = true;

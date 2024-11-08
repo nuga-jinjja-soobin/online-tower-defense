@@ -19,7 +19,9 @@ export class Game {
     this.monstersDie = [];
     this.monsterId = 0;
     this.towerId = 0;
+    this.towerCount = 3;
     this.assets = getGameAssets();
+    this.state = GAME_STATE.STAY;
   }
 
   // 게임 방에 유저 추가 메서드
@@ -32,6 +34,24 @@ export class Game {
     if (this.users.length >= MAX_PLAYER_TO_GAME_SESSIONS) {
       this.startGame();
     }
+  }
+
+  gameRemoveUser(id) {
+    this.users = this.users.filter((user) => user.id !== id);
+  }
+
+  findUserExceptMe(exceptId) {
+    const findUser = this.users.find((user) => user.id !== exceptId);
+    return findUser;
+  }
+
+  gameRemoveUser(id) {
+    this.users = this.users.filter((user) => user.id !== id);
+  }
+
+  findUserExceptMe(exceptId) {
+    const findUser = this.users.find((user) => user.id !== exceptId);
+    return findUser;
   }
 
   // 게임 시작 함수
@@ -171,5 +191,38 @@ export class Game {
       enemyUser.socket.sequence,
     );
     enemyUser.socket.write(enemyUserResponsePacket);
+  }
+
+  endGame(gameEndUser) {
+    this.state = GAME_STATE.END;
+
+    // 나를 제외한 상대방을 찾는다.
+    const otherUser = findUserExceptMe(gameEndUser.id);
+    if (!otherUser) {
+      console.log('게임에 참여중인 상대방이 없음');
+      return;
+    }
+
+    let winnerGameEndResponsePayloadData = { isWin: true };
+    let loserGameEndResponsePayloadData = { isWin: false };
+
+    // 나와 상대방에게 게임 끝 패킷을 보낸다.
+    const winnerRegisterResponsePacket = createResponse(
+      PACKET_TYPE.GAME_OVER_NOTIFICATION,
+      winnerGameEndResponsePayloadData,
+      gameEndUser.socket.sequence,
+    );
+
+    const loserRegisterResponsePacket = createResponse(
+      PACKET_TYPE.GAME_OVER_NOTIFICATION,
+      loserGameEndResponsePayloadData,
+      otherUser.socket.sequence,
+    );
+
+    console.log(`winnerGameEndResponsePayloadData ${winnerGameEndResponsePayloadData}`);
+    console.log(`loserGameEndResponsePayloadData ${loserGameEndResponsePayloadData}`);
+
+    gameEndUser.socket.write(winnerRegisterResponsePacket);
+    otherUser.socket.write(loserRegisterResponsePacket);
   }
 }

@@ -6,7 +6,7 @@ export const USER_STATE = {
 };
 
 export const GAME_STATE = {
-  WAITING: 0,
-  INPROGRESS: 1,
+  STAY: 0,
+  PLAY: 1,
   END: 2,
 };
