@@ -34,6 +34,6 @@ export const registerHandler = async ({ socket, payload }) => {
     socket.sequence,
   );
 
-  console.log(`registerResponsePayloadData ${registerResponsePayloadData}`);
+  // console.log(`registerResponsePayloadData ${registerResponsePayloadData}`);
   socket.write(registerResponsePacket);
 };

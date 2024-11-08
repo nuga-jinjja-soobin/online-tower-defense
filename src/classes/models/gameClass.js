@@ -89,13 +89,13 @@ export class Game {
   }
 
   // gameData.userId.monsters에 몬스터 추가
-  spawnMonster(userId) {
+  spawnMonster(socket) {
     const monster = new Monster(this.monsterId);
     this.monsterId++;
-    if (!this.gameData[userId].monsters) {
-      this.gameData[userId].monsters = [];
+    if (!this.gameData[socket.userId].monsters) {
+      this.gameData[socket.userId].monsters = [];
     }
-    this.gameData[socket].monsters.push(monster);
+    this.gameData[socket.userId].monsters.push(monster);
     this.spawnEnemyMonsterNotification(socket, monster.monsterId, monster.monsterNumber);
     return monster;
   }
@@ -238,8 +238,8 @@ export class Game {
       otherUser.socket.sequence,
     );
 
-    console.log(`winnerGameEndResponsePayloadData ${winnerGameEndResponsePayloadData}`);
-    console.log(`loserGameEndResponsePayloadData ${loserGameEndResponsePayloadData}`);
+    // console.log(`winnerGameEndResponsePayloadData ${winnerGameEndResponsePayloadData}`);
+    // console.log(`loserGameEndResponsePayloadData ${loserGameEndResponsePayloadData}`);
 
     gameEndUser.socket.write(winnerRegisterResponsePacket);
     otherUser.socket.write(loserRegisterResponsePacket);

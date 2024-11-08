@@ -29,7 +29,7 @@ export const spawnMonsterHandler = ({ socket, payload }) => {
       );
     }
 
-    const monster = gameSession.spawnMonster(socket.userId);
+    const monster = gameSession.spawnMonster(socket);
 
     // 현재 소켓의 몬스터 중 랜덤으로 보내준다.
     const spawnMonsterPacket = createResponse(
@@ -71,11 +71,11 @@ export const enemyMonsterDeathNotification = ({ socket, payload }) => {
       .map((user) => user.id);
     const responseUser = userIds.find((userId) => userId !== user.id); // 상대 유저
 
-    console.log('======monsterDeathNotification======');
-    console.log(`현재 게임 세션: ${userGameSessionId}`);
-    console.log(`me: ${user.id}`);
-    console.log(`enemy: ${responseUser}`);
-    console.log('====================================');
+    // console.log('======monsterDeathNotification======');
+    // console.log(`현재 게임 세션: ${userGameSessionId}`);
+    // console.log(`me: ${user.id}`);
+    // console.log(`enemy: ${responseUser}`);
+    // console.log('====================================');
 
     const ResponsePacket = createResponse(
       PACKET_TYPE.ENEMY_MONSTER_DEATH_NOTIFICATION,
