@@ -21,9 +21,9 @@ export const createResponse = (packetType, payloadData = {}, sequence) => {
   const gamePacket = protoMessages.packet.GamePacket;
   const responsePayload = {};
   responsePayload[PACKET_MAPS[packetType]] = payloadData;
-  console.log(`responsePayload: `, responsePayload);
+  // console.log(`responsePayload: `, responsePayload);
   const payloadBuffer = gamePacket.encode(responsePayload).finish();
-  console.log(`payload: `, payloadBuffer);
+  // console.log(`payload: `, payloadBuffer);
 
   // 6. 페이로드 길이
   const payloadLengthBuffer = Buffer.alloc(config.packet.payloadLength);

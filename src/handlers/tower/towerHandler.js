@@ -7,12 +7,12 @@ export const towerPurchaseHandler = ({ socket, payload }) => {
   console.log(`C2STowerPurchase 작동 완료.`);
   const x = payload.x;
   const y = payload.y;
-  console.log(payload);
+  // console.log(payload);
   // 게임 클래스 불러오기
   const user = getUserBySocket(socket);
   const gameSession = getGameSession(user.gameSessionId);
   // 게임 클래스의 addTower실행 생성된 타워 데이터 반환
-  const tower = gameSession.addTower(socket, x, y);
+  const tower = gameSession.addTower(socket.userId, x, y);
   const towerData = {
     towerId: tower.towerId,
   };

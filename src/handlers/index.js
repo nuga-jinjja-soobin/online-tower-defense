@@ -7,10 +7,7 @@ import CustomError from '../utils/errors/customError.js';
 import { ErrorCodes } from '../utils/errors/errorCodes.js';
 import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
-import {
-  enemyMonsterDeathNotification,
-  spawnMonsterHandler,
-} from './monster/spawnMonsterHandler.js';
+import { enemyMonsterDeathNotification, spawnMonsterHandler } from './monster/monsterHandler.js';
 import { gameEndHandler } from './game/gameEndHandler.js';
 import { enemyTowerAttackNotificationHandler, towerPurchaseHandler } from './tower/towerHandler.js';
 import { updateBaseHPNotification } from './base/baseHandler.js';
@@ -55,7 +52,7 @@ const handlers = {
 };
 
 export const getHandlerByPacketType = (PacketType) => {
-  console.log(PacketType);
+  // console.log(PacketType);
   if (!handlers[PacketType]) {
     throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, '핸들러 아이디를 찾을 수 없습니다.');
   }

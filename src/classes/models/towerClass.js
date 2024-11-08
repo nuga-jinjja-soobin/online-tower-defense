@@ -4,6 +4,10 @@ class Tower {
     this.x = x;
     this.y = y;
   }
+
+  getTowerData() {
+    return { towerId: this.towerId, x: this.x, y: this.y };
+  }
 }
 
 export default Tower;

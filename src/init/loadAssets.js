@@ -31,7 +31,6 @@ export const loadGameAssets = async () => {
     const [initial] = await Promise.all([readFileAsync('initial.json')]);
 
     gameAssets = { initial };
-    console.log(`Game Assets 로드 완료: `, initial);
     return gameAssets;
   } catch (e) {
     throw new Error('Failed to load game assets: ' + e.message);

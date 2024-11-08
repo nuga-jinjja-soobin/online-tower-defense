@@ -26,8 +26,9 @@ export const matchHandler = async ({ socket, payload }) => {
     // 일단 임시로 만든 더미 GameState를 가져올 예정
     const gameSession = getGameSession(response.gameSessionId);
     const initialGameState = createInitialGameData();
-    const [playerData, opponentData] = gameSession.getGameData(socket);
-    console.log(playerData, opponentData);
+    const [playerData, opponentData] = gameSession.getGameData(socket.userId, response.partnerId);
+    // console.log(`${socket.userId} 본인의 데이터: `, playerData);
+    // console.log(`${response.partnerId} 적의 데이터: `, opponentData);
 
     const S2CMatchStartNotificationResponse = createResponse(
       PACKET_TYPE.MATCH_START_NOTIFICATION,
@@ -39,7 +40,7 @@ export const matchHandler = async ({ socket, payload }) => {
       sequence,
     );
 
-    console.log(response);
+    // console.log(response);
     console.log(`${user.id} 유저 매칭 성공`);
     socket.write(S2CMatchStartNotificationResponse);
   };

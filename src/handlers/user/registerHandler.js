@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 
 export const registerHandler = async ({ socket, payload }) => {
   console.log(`registHandler 작동 완료.`);
-  console.log('payload', payload);
 
   let registerResponsePayloadData = {};
 
@@ -35,6 +34,6 @@ export const registerHandler = async ({ socket, payload }) => {
     socket.sequence,
   );
 
-  console.log(`registerResponsePayloadData ${registerResponsePayloadData}`);
+  // console.log(`registerResponsePayloadData ${registerResponsePayloadData}`);
   socket.write(registerResponsePacket);
 };

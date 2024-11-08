@@ -1,65 +1,62 @@
 import { getGameAssets } from '../../../init/loadAssets.js';
+import { getGameSession } from '../../../sessions/gameSession.js';
+import { getUserBySocket } from '../../../sessions/userSessions.js';
 import { generateRandomMonsterPath } from './generateRandomMonsterPath.js';
 
 // 게임 세션에 유저의 초기 gameData를 세팅하는 함수
-export const createUserInitialData = (gameData, userData) => {
+export const createUserInitialData = (gameData, userId) => {
   const gameAsset = getGameAssets();
   const baseHp = gameAsset.initial.data.baseHp;
-  const baseX = gameAsset.initial.data.basePosition.x;
-  const baseY = gameAsset.initial.data.basePosition.y;
 
   // 초기 타워 및 몬스터 생성 및 배치
-  gameData[userData] = {
+  gameData[userId] = {
     monsterPath: generateRandomMonsterPath(),
-    towers: gameData[userData].towers,
+    towers: gameData[userId].towers,
     monsters: [], // 초기 몬스터 데이터를 담을 배열
     baseHp: baseHp,
     gold: gameAsset.initial.data.initalGold,
     score: gameAsset.initial.data.score,
     monsterLevel: gameAsset.initial.data.monsterLevel,
     highScore: 0,
-    base: gameData[userData].base,
+    base: gameData[userId].base,
   };
+  console.log(`${userId}의 초기데이터: `, gameData[userId]);
 };
 
 // 사용자의 gameData를 생성하는 함수
-export const createUserData = (gameData, socket) => {
+export const createUserData = (gameData, userId) => {
   // towers, monsters 각 인스턴스에서 필요한 값만 매핑
   let towersData = [];
-  for (let i in gameData[socket].towers) {
-    const towerId = gameData[socket].towers[i].towerId;
-    const x = gameData[socket].towers[i].x;
-    const y = gameData[socket].towers[i].y;
-    towersData.push({ towerId, x, y });
+  for (let i in gameData[userId].towers) {
+    const tower = gameData[userId].towers[i].getTowerData();
+    towersData.push(tower);
   }
   let monsterData = [];
-  for (let i in gameData[socket].monsters) {
-    const monsterId = gameData[socket].monsters[i].monsterId;
-    const monsterNumber = gameData[socket].monsters[i].monsterNumber;
-    const level = gameData[socket].monsters[i].level;
-    monsterData.push({ monsterId, monsterNumber, level });
+  for (let i in gameData[userId].monsters) {
+    const monster = gameData[userId].monsters[i].getMonsterData();
+    monsterData.push(monster);
   }
 
   //베이스 데이터 작성
   const baseData = {
-    hp: gameData[socket].base.hp,
-    maxHp: gameData[socket].base.maxHp,
+    hp: gameData[userId].base.hp,
+    maxHp: gameData[userId].base.maxHp,
   };
 
   const basePosition = {
-    x: gameData[socket].base.x,
-    y: gameData[socket].base.y,
+    x: gameData[userId].base.x,
+    y: gameData[userId].base.y,
   };
 
   const data = {
-    gold: gameData[socket].gold,
+    gold: gameData[userId].gold,
     base: baseData,
-    highScore: gameData[socket].highScore,
+    highScore: gameData[userId].highScore,
     towers: towersData,
     monsters: monsterData,
-    monsterLevel: gameData[socket].monsterLevel,
-    score: gameData[socket].score,
-    monsterPath: gameData[socket].monsterPath,
+    monsterLevel: gameData[userId].monsterLevel,
+    score: gameData[userId].score,
+    monsterPath: gameData[userId].monsterPath,
     basePosition: basePosition,
   };
 
@@ -75,6 +72,33 @@ export const createInitialGameData = () => {
     towerCost: gameAsset.initial.data.towerCost,
     initialGold: gameAsset.initial.data.initalGold,
     monsterSpawnInterval: gameAsset.initial.data.monsterSpawnInterval,
+  };
+
+  return data;
+};
+
+export const createSyncData = (socket) => {
+  const user = getUserBySocket(socket);
+  const gameSession = getGameSession(user.gameSessionId);
+  let towerData = [];
+  for (let i in gameSession.gameData[socket.userId].towers) {
+    const tower = gameSession.gameData[socket.userId].towers[i].getTowerData();
+    towerData.push(tower);
+  }
+  // console.log(gameSession.gameData[userId].monsters);
+  let monsterData = [];
+  for (let i in gameSession.gameData[socket.userId].monsters) {
+    const monster = gameSession.gameData[socket.userId].monsters[i].getMonsterData();
+    monsterData.push(monster);
+  }
+
+  const data = {
+    userGold: gameSession.gameData[socket.userId].gold,
+    baseHp: gameSession.gameData[socket.userId].base.hp,
+    monsterLevel: gameSession.gameData[socket.userId].monsterLevel,
+    score: gameSession.gameData[socket.userId].score,
+    towers: towerData,
+    monsters: monsterData,
   };
 
   return data;
