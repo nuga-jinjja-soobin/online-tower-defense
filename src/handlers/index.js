@@ -9,7 +9,6 @@ import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
 import {
   enemyMonsterDeathNotification,
-  monsterDeathNotification,
   spawnMonsterHandler,
 } from './monster/spawnMonsterHandler.js';
 import { enemyTowerAttackNotificationHandler, towerPurchaseHandler } from './tower/towerHandler.js';
@@ -45,12 +44,8 @@ const handlers = {
     protoType: 'combat.C2SMonsterAttackBaseRequest',
   },
   [PACKET_TYPE.MONSTER_DEATH_NOTIFICATION]: {
-    handler: monsterDeathNotification,
-    protoType: 'gameEvent.C2SMonsterDeathNotification',
-  },
-  [PACKET_TYPE.ENEMY_MONSTER_DEATH_NOTIFICATION]: {
     handler: enemyMonsterDeathNotification,
-    protoType: 'gameEvent.S2CEnemyMonsterDeathNotification',
+    protoType: 'gameEvent.C2SMonsterDeathNotification',
   },
 };
 

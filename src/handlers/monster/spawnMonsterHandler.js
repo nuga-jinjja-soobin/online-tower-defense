@@ -47,44 +47,43 @@ export const spawnMonsterHandler = ({ socket, payload }) => {
   }
 };
 
-export const monsterDeathNotification = ({ socket, payload }) => {
+export const enemyMonsterDeathNotification = ({ socket, payload }) => {
   try {
-    const { mosterId } = payload;
+    const monsterId = payload.monsterId;
     const user = getUserBySocket(socket);
+    if (!user) {
+      throw new CustomError(
+        ErrorCodes.GAME_NOT_FOUND,
+        '게임 세션을 찾을 수 없습니다: enemyMonsterDeathNotification',
+        socket.sequence,
+      );
+    }
     const userGameSessionId = user.gameSessionId; // 현재 게임 세션
+    if (!userGameSessionId) {
+      throw new CustomError(
+        ErrorCodes.USER_NOT_FOUND,
+        '유저를 찾을 수 없습니다: enemyMonsterDeathNotification',
+        socket.sequence,
+      );
+    }
     const userIds = userSessions // 게임 세션 안에 들어있는 유저들
       .filter((userGameId) => userGameId.gameSessionId === userGameSessionId)
       .map((user) => user.id);
     const responseUser = userIds.find((userId) => userId !== user.id); // 상대 유저
 
     console.log('======monsterDeathNotification======');
-    console.log(payload);
-    console.log(payload.mosterId);
     console.log(`현재 게임 세션: ${userGameSessionId}`);
     console.log(`me: ${user.id}`);
     console.log(`enemy: ${responseUser}`);
     console.log('====================================');
 
-    // socket.write('');
-  } catch (error) {
-    handleError(socket, error);
-  }
-};
+    const ResponsePacket = createResponse(
+      PACKET_TYPE.ENEMY_MONSTER_DEATH_NOTIFICATION,
+      { monsterId },
+      socket.sequence,
+    );
 
-export const enemyMonsterDeathNotification = ({ socket, payload }) => {
-  try {
-    const user = getUserBySocket(socket);
-    const userGameSessionId = user.gameSessionId; // 현재 게임 세션
-    const userIds = userSessions // 게임 세션 안에 들어있는 유저들
-      .filter((userGameId) => userGameId.gameSessionId === userGameSessionId)
-      .map((user) => user.id);
-    const responseUser = userIds.find((userId) => userId !== user.id); // 상대 유저
-
-    console.log('===enemyMonsterDeathNotification===');
-    console.log(`현재 게임 세션: ${userGameSessionId}`);
-    console.log(`me: ${user.id}`);
-    console.log(`enemy: ${responseUser}`);
-    console.log('===================================');
+    socket.write(ResponsePacket);
   } catch (error) {
     handleError(socket, error);
   }
