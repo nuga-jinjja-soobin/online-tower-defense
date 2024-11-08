@@ -13,6 +13,11 @@ export const handleError = (socket, error, data) => {
     message = error.message;
     console.error(`일반에러: ${error.message}`);
   }
+
+  if (!data) {
+    return;
+  }
+  
   const responsePacket = createResponse(data.packetType, data.failPayloadData, socket.sequence);
   socket.write(responsePacket);
 };
