@@ -7,10 +7,7 @@ import CustomError from '../utils/errors/customError.js';
 import { ErrorCodes } from '../utils/errors/errorCodes.js';
 import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
-import {
-  enemyMonsterDeathNotification,
-  spawnMonsterHandler,
-} from './monster/spawnMonsterHandler.js';
+import { enemyMonsterDeathNotification, spawnMonsterHandler } from './monster/monsterHandler.js';
 import { gameEndHandler } from './game/gameEndHandler.js';
 import { enemyTowerAttackNotificationHandler, towerPurchaseHandler } from './tower/towerHandler.js';
 import { updateBaseHPNotification } from './base/baseHandler.js';

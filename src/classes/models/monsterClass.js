@@ -10,10 +10,6 @@ export class Monster {
     ++this.level;
   }
 
-  monsterDie() {
-    this.die = true;
-  }
-
   getMonsterData() {
     return { monsterId: this.monsterId, monsterNumber: this.monsterNumber, level: this.level };
   }

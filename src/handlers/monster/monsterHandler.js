@@ -1,6 +1,5 @@
 import { PACKET_TYPE } from '../../constants/header.js';
 import { getGameSession } from '../../sessions/gameSession.js';
-import { userSessions } from '../../sessions/sessions.js';
 import { getUserBySocket } from '../../sessions/userSessions.js';
 import CustomError from '../../utils/errors/customError.js';
 import { ErrorCodes } from '../../utils/errors/errorCodes.js';
@@ -49,27 +48,27 @@ export const spawnMonsterHandler = ({ socket, payload }) => {
 
 export const enemyMonsterDeathNotification = ({ socket, payload }) => {
   try {
+    console.log(`------enemyMonsterDeathNotification 핸들러 작동------`);
     const monsterId = payload.monsterId;
-    const user = getUserBySocket(socket);
-    if (!user) {
-      throw new CustomError(
-        ErrorCodes.GAME_NOT_FOUND,
-        '게임 세션을 찾을 수 없습니다: enemyMonsterDeathNotification',
-        socket.sequence,
-      );
-    }
-    const userGameSessionId = user.gameSessionId; // 현재 게임 세션
-    if (!userGameSessionId) {
+    const socketUser = getUserBySocket(socket);
+    if (!socketUser) {
       throw new CustomError(
         ErrorCodes.USER_NOT_FOUND,
         '유저를 찾을 수 없습니다: enemyMonsterDeathNotification',
         socket.sequence,
       );
     }
-    const userIds = userSessions // 게임 세션 안에 들어있는 유저들
-      .filter((userGameId) => userGameId.gameSessionId === userGameSessionId)
-      .map((user) => user.id);
-    const responseUser = userIds.find((userId) => userId !== user.id); // 상대 유저
+    const userGameSessionId = socketUser.gameSessionId; // 현재 게임 세션
+    if (!userGameSessionId) {
+      throw new CustomError(
+        ErrorCodes.GAME_NOT_FOUND,
+        '게임 세션을 찾을 수 없습니다: enemyMonsterDeathNotification',
+        socket.sequence,
+      );
+    }
+    const gameSession = getGameSession(socketUser.gameSessionId);
+    gameSession.dieMonsterCheck(socketUser.id, monsterId);
+    const opponentUser = gameSession.users.find((user) => user.id !== socketUser.id); // 상대 유저
 
     // console.log('======monsterDeathNotification======');
     // console.log(`현재 게임 세션: ${userGameSessionId}`);
@@ -80,10 +79,10 @@ export const enemyMonsterDeathNotification = ({ socket, payload }) => {
     const ResponsePacket = createResponse(
       PACKET_TYPE.ENEMY_MONSTER_DEATH_NOTIFICATION,
       { monsterId },
-      socket.sequence,
+      opponentUser.socket.sequence,
     );
 
-    socket.write(ResponsePacket);
+    opponentUser.socket.write(ResponsePacket);
   } catch (error) {
     handleError(socket, error);
   }

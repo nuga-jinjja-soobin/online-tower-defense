@@ -21,7 +21,7 @@ export class Game {
     this.towerId = 0;
     this.towerCount = 3;
     this.assets = getGameAssets();
-    this.state = GAME_STATE.STAY;
+    this.state = GAME_STATE.WAITING;
   }
 
   // 게임 방에 유저 추가 메서드
@@ -79,7 +79,7 @@ export class Game {
 
   getGameData(userId, partnerId) {
     // 주어진 소켓 ID가 아닌 상대 플레이어 찾기
-    // const opponentUser = this.users.find((user) => user.userId !== userId);
+    // const opponentUser = this.users.find((user) => user.id !== userId);
 
     // 현재 사용자와 상대방의 데이터를 가져옴
     const userData = createUserData(this.gameData, userId);
@@ -115,11 +115,14 @@ export class Game {
     responseUser.socket.write(ResponsePacket);
   }
 
-  dieMonsterCheck(monsterId) {
-    const dieMonster = this.monsters.find((monster) => monster.id === monsterId);
-    dieMonster.monsterDie();
-    this.monstersDie.push(dieMonster);
-    return dieMonster;
+  dieMonsterCheck(userId, monsterId) {
+    this.gameData[userId].monster = this.gameData[userId].monsters.filter((monster) => {
+      if (monster.id !== monsterId) {
+        return monster;
+      } else {
+        this.monstersDie.push(monster);
+      }
+    });
   }
 
   // 타워 추가
@@ -146,7 +149,8 @@ export class Game {
   //타워 구입 적에게 정보 전송
   addEnemyTowerNotification(socket, x, y, towerId) {
     const userId = socket.userId;
-    const responseUser = this.users.find((user) => user.userId !== userId);
+    this.gameData[userId].gold -= this.assets.initial.data.towerCost;
+    const responseUser = this.users.find((user) => user.id !== userId);
     const ResponsePacket = createResponse(
       PACKET_TYPE.ADD_ENEMY_TOWER_NOTIFICATION,
       {
@@ -164,7 +168,7 @@ export class Game {
     const userId = socket.userId;
     const towerId = payloadData.towerId;
     const monsterId = payloadData.monsterId;
-    const responseUser = this.users.find((user) => user.userId !== userId);
+    const responseUser = this.users.find((user) => user.id !== userId);
     const ResponsePacket = createResponse(
       PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
       {
@@ -190,7 +194,7 @@ export class Game {
 
     // 피격 정보 전송
     const userResponsePacket = createResponse(
-      PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
+      PACKET_TYPE.UPDATE_BASE_HP_NOTIFICATION,
       {
         isOpponent: false,
         baseHp: this.gameData[userId].base.hp,
@@ -200,16 +204,35 @@ export class Game {
     socket.write(userResponsePacket);
 
     //적에게 피격 정보 전송
-    const enemyUser = this.users.find((user) => user.userId !== userId);
+    const enemyUser = this.users.find((user) => user.id !== userId);
     const enemyUserResponsePacket = createResponse(
-      PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
+      PACKET_TYPE.UPDATE_BASE_HP_NOTIFICATION,
       {
         isOpponent: true,
-        baseHp: this.gameData[enemyUser.userId].base.hp,
+        baseHp: this.gameData[userId].base.hp,
       },
       enemyUser.socket.sequence,
     );
     enemyUser.socket.write(enemyUserResponsePacket);
+
+    if (this.gameData[userId].base.hp < 0) {
+      const userResponsePacket = createResponse(
+        PACKET_TYPE.GAME_OVER_NOTIFICATION,
+        {
+          isWin: false,
+        },
+        socket.sequence,
+      );
+      socket.write(userResponsePacket);
+      const enemyUserResponsePacket = createResponse(
+        PACKET_TYPE.GAME_OVER_NOTIFICATION,
+        {
+          isWin: true,
+        },
+        enemyUser.socket.sequence,
+      );
+      enemyUser.socket.write(enemyUserResponsePacket);
+    }
   }
 
   endGame(gameEndUser) {
