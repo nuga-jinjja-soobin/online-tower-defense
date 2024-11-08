@@ -45,12 +45,12 @@ export const packetParser = (socket) => {
   // 7. 페이로드 (payloadLength bytes)
   const payload = socket.buffer.subarray(offset, offset + payloadLength);
 
-  console.log(`Packet Type: ${packetType}`);
-  console.log(`Version Length: ${versionLength}`);
-  console.log(`Version: ${version}`);
-  console.log(`Sequence: ${sequence}`);
-  console.log(`Payload Length: ${payloadLength}`);
-  console.log(`payload: `, payload);
+  // console.log(`Packet Type: ${packetType}`);
+  // console.log(`Version Length: ${versionLength}`);
+  // console.log(`Version: ${version}`);
+  // console.log(`Sequence: ${sequence}`);
+  // console.log(`Payload Length: ${payloadLength}`);
+  // console.log(`payload: `, payload);
 
   // --------------------------------------------------
   // payload의 경우 요청한 패킷 타입에 따라 구조가 다르기 때문에 프로토버퍼로 읽는다.
