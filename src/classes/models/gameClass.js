@@ -15,11 +15,9 @@ export class Game {
     this.id = id;
     this.users = [];
     this.gameData = {};
-    this.state = GAME_STATE.WAITING;
     this.monstersDie = [];
     this.monsterId = 0;
     this.towerId = 0;
-    this.towerCount = 3;
     this.assets = getGameAssets();
     this.state = GAME_STATE.WAITING;
   }
