@@ -7,8 +7,11 @@ import CustomError from '../utils/errors/customError.js';
 import { ErrorCodes } from '../utils/errors/errorCodes.js';
 import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
+import {
+  enemyMonsterDeathNotification,
+  spawnMonsterHandler,
+} from './monster/spawnMonsterHandler.js';
 import { gameEndHandler } from './game/gameEndHandler.js';
-import { spawnMonsterHandler } from './monster/spawnMonsterHandler.js';
 import { enemyTowerAttackNotificationHandler, towerPurchaseHandler } from './tower/towerHandler.js';
 import { updateBaseHPNotification } from './base/baseHandler.js';
 
@@ -44,6 +47,10 @@ const handlers = {
   [PACKET_TYPE.MONSTER_ATTACK_BASE_REQUEST]: {
     handler: updateBaseHPNotification,
     protoType: 'combat.C2SMonsterAttackBaseRequest',
+  },
+  [PACKET_TYPE.MONSTER_DEATH_NOTIFICATION]: {
+    handler: enemyMonsterDeathNotification,
+    protoType: 'gameEvent.C2SMonsterDeathNotification',
   },
 };
 

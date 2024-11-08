@@ -96,7 +96,23 @@ export class Game {
       this.gameData[socket].monsters = [];
     }
     this.gameData[socket].monsters.push(monster);
+    this.spawnEnemyMonsterNotification(socket, monster.monsterId, monster.monsterNumber);
     return monster;
+  }
+
+  // 몬스터 생성 적에게 전송
+  spawnEnemyMonsterNotification(socket, monsterId, monsterNumber) {
+    const responseUser = this.users.find((user) => user.socket !== socket);
+    const ResponsePacket = createResponse(
+      PACKET_TYPE.SPAWN_ENEMY_MONSTER_NOTIFICATION,
+      {
+        monsterId,
+        monsterNumber,
+      },
+      responseUser.socket.sequence,
+    );
+
+    responseUser.socket.write(ResponsePacket);
   }
 
   dieMonsterCheck(monsterId) {
