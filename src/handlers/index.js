@@ -2,17 +2,18 @@
 
 import { PACKET_TYPE } from '../constants/header.js';
 // import { initialHandler } from './user/initial.handler.js';
-import { registHandler } from './user/registHandler.js';
+import { registerHandler } from './user/registerHandler.js';
 import CustomError from '../utils/errors/customError.js';
 import { ErrorCodes } from '../utils/errors/errorCodes.js';
 import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
+import { gameEndHandler } from './game/gameEndHandler.js';
 import { spawnMonsterHandler } from './monster/spawnMonsterHandler.js';
 import { enemyTowerAttackNotificationHandler, towerPurchaseHandler } from './tower/towerHandler.js';
 
 const handlers = {
   [PACKET_TYPE.REGISTER_REQUEST]: {
-    handler: registHandler,
+    handler: registerHandler,
     protoType: 'auth.C2SRegisterRequest',
   },
   [PACKET_TYPE.LOGIN_REQUEST]: {
@@ -34,6 +35,10 @@ const handlers = {
   [PACKET_TYPE.TOWER_ATTACK_REQUEST]: {
     handler: enemyTowerAttackNotificationHandler,
     protoType: 'combat.C2STowerAttackRequest',
+  },
+  [PACKET_TYPE.GAME_END_REQUEST]: {
+    handler: gameEndHandler,
+    protoType: 'gameEvent.C2SGameEndRequest',
   },
 };
 
