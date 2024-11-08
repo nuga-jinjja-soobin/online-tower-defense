@@ -2,16 +2,12 @@
   "name": "initial",
   "version": "1.0.0",
   "data": {
-    "baseHp": 200,
-    "towerCost": 3000,
-    "initalGold": 300,
-    "monsterSpawnInterval": 5000,
-    "initialTowerCount": 1,
+    "baseHp": 100,
+    "towerCost": 1000,
+    "initalGold": 3000,
+    "monsterSpawnInterval": 2,
+    "initialTowerCount": 2,
     "score": 0,
-    "basePosition": {
-      "x": 1350,
-      "y": 300
-    },
     "monsterLevel": 1
   }
 }
