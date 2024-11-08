@@ -90,6 +90,14 @@ class DatabaseManager {
   updateUserLogin(id) {
     this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
   }
+
+  async createGameHistoriesWin(winnerId, looserId, isWin) {
+    await this.pools['USER_DB'].query(USER_SQL_QUERIES.CREATE_GAME_HISTORY_WIN, [
+      winnerId,
+      looserId,
+      win,
+    ]);
+  }
 }
 
 export default DatabaseManager;
