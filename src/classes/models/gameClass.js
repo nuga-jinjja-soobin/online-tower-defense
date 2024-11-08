@@ -2,12 +2,13 @@ import { MAX_PLAYER_TO_GAME_SESSIONS } from '../../constants/env.js';
 import { GAME_STATE } from '../../constants/state.js';
 import { createUserInitialData, createUserData } from '../../utils/game/data/createData.js';
 import { Monster } from './monsterClass.js';
-import { generateRandomMonsterPath } from '../../handlers/monster/monsterPath.js';
+import { generateRandomMonsterPath } from '../../utils/game/data/generateRandomMonsterPath.js';
 import { getRandomPositionNearPath } from '../../handlers/tower/towerHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import Tower from './towerClass.js';
 import { getGameAssets } from '../../init/loadAssets.js';
 import { PACKET_TYPE } from '../../constants/header.js';
+import Base from './baseClass.js';
 
 export class Game {
   constructor(id) {
@@ -42,8 +43,16 @@ export class Game {
 
     // 유저의 초기데이터 설정을 위해 게임 세션에 있는 유저만큼 반복
     for (let i in this.users) {
-      this.gameData[this.users[i].socket] = {};
-      this.addPath(this.users[i].socket);
+      const socket = this.users[i].socket;
+      this.gameData[socket] = {};
+      this.addPath(socket);
+      const index = this.gameData[socket].paths.length - 1;
+      this.addBase(
+        socket,
+        this.gameData[socket].paths[index].x,
+        this.gameData[socket].paths[index].y,
+        this.assets.initial.data.baseHp,
+      );
       createUserInitialData(this.gameData, this.users[i].socket);
     }
   }
@@ -100,6 +109,7 @@ export class Game {
 
   //타워 구입 적에게 정보 전송
   addEnemyTowerNotification(socket, x, y, towerId) {
+    const responseUser = this.users.find((user) => user.socket !== socket);
     const ResponsePacket = createResponse(
       PACKET_TYPE.ADD_ENEMY_TOWER_NOTIFICATION,
       {
@@ -107,9 +117,8 @@ export class Game {
         x,
         y,
       },
-      socket.sequence,
+      responseUser.socket.sequence,
     );
-    const responseUser = this.users.find((user) => user.socket !== socket);
     responseUser.socket.write(ResponsePacket);
   }
 
@@ -117,15 +126,50 @@ export class Game {
   enemyTowerAttackNotification(socket, payloadData) {
     const towerId = payloadData.towerId;
     const monsterId = payloadData.monsterId;
+    const responseUser = this.users.find((user) => user.socket !== socket);
     const ResponsePacket = createResponse(
       PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
       {
         towerId,
         monsterId,
       },
+      responseUser.socket.sequence,
+    );
+    responseUser.socket.write(ResponsePacket);
+  }
+
+  addBase(socket, x, y, baseHp) {
+    const base = new Base(x, y, baseHp);
+    this.gameData[socket].base = base;
+    return base;
+  }
+
+  updateBaseHPNotification(socket, damage) {
+    // 베이스 피격
+    console.log('-------------------------------------------------', this.gameData[socket].base);
+    this.gameData[socket].base.hitBase(damage);
+
+    // 피격 정보 전송
+    const userResponsePacket = createResponse(
+      PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
+      {
+        isOpponent: false,
+        baseHp: this.gameData[socket].base.hp,
+      },
       socket.sequence,
     );
-    const responseUser = this.users.find((user) => user.socket !== socket);
-    responseUser.socket.write(ResponsePacket);
+    socket.write(userResponsePacket);
+
+    //적에게 피격 정보 전송
+    const enemyUser = this.users.find((user) => user.socket !== socket);
+    const enemyUserResponsePacket = createResponse(
+      PACKET_TYPE.ENEMY_TOWER_ATTACK_NOTIFICATION,
+      {
+        isOpponent: true,
+        baseHp: this.gameData[socket].base.hp,
+      },
+      enemyUser.socket.sequence,
+    );
+    enemyUser.socket.write(enemyUserResponsePacket);
   }
 }
