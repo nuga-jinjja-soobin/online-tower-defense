@@ -12,7 +12,6 @@ import {
   spawnMonsterHandler,
 } from './monster/spawnMonsterHandler.js';
 import { gameEndHandler } from './game/gameEndHandler.js';
-import { spawnMonsterHandler } from './monster/spawnMonsterHandler.js';
 import { enemyTowerAttackNotificationHandler, towerPurchaseHandler } from './tower/towerHandler.js';
 import { updateBaseHPNotification } from './base/baseHandler.js';
 
