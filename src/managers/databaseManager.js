@@ -89,11 +89,10 @@ class DatabaseManager {
     await this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
   }
 
-  async createGameHistoriesWin(winnerId, looserId, isWin) {
+  async createGameHistoriesWin(winnerId, loserId) {
     await this.pools['USER_DB'].query(USER_SQL_QUERIES.CREATE_GAME_HISTORY_WIN, [
       winnerId,
-      looserId,
-      win,
+      loserId,
     ]);
   }
 }

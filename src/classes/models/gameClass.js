@@ -53,7 +53,7 @@ export class Game {
     const findUser = this.users.find((user) => user.id !== exceptId);
     return findUser;
   }
-  
+
   // 게임 시작 함수
   // 1. 게임 시작이 되면 게임데이터 초기값을 불러옴
   // 2. 게임에 참가한 각 유저에게 초기 데이터를 제공함
@@ -204,7 +204,7 @@ export class Game {
     }
 
     let winnerGameEndResponsePayloadData = { isWin: true };
-    let looserGameEndResponsePayloadData = { isWin: false };
+    let loserGameEndResponsePayloadData = { isWin: false };
 
     // 나와 상대방에게 게임 끝 패킷을 보낸다.
     const winnerRegisterResponsePacket = createResponse(
@@ -213,49 +213,16 @@ export class Game {
       gameEndUser.socket.sequence,
     );
 
-    const looserRegisterResponsePacket = createResponse(
+    const loserRegisterResponsePacket = createResponse(
       PACKET_TYPE.GAME_OVER_NOTIFICATION,
-      looserGameEndResponsePayloadData,
+      loserGameEndResponsePayloadData,
       otherUser.socket.sequence,
     );
 
     console.log(`winnerGameEndResponsePayloadData ${winnerGameEndResponsePayloadData}`);
-    console.log(`looserGameEndResponsePayloadData ${looserGameEndResponsePayloadData}`);
+    console.log(`loserGameEndResponsePayloadData ${loserGameEndResponsePayloadData}`);
 
     gameEndUser.socket.write(winnerRegisterResponsePacket);
-    otherUser.socket.write(looserRegisterResponsePacket);
-  }
-
-  endGame(gameEndUser) {
-    this.state = GAME_STATE.END;
-
-    // 나를 제외한 상대방을 찾는다.
-    const otherUser = findUserExceptMe(gameEndUser.id);
-    if (!otherUser) {
-      console.log('게임에 참여중인 상대방이 없음');
-      return;
-    }
-
-    let winnerGameEndResponsePayloadData = { isWin: true };
-    let looserGameEndResponsePayloadData = { isWin: false };
-
-    // 나와 상대방에게 게임 끝 패킷을 보낸다.
-    const winnerRegisterResponsePacket = createResponse(
-      PACKET_TYPE.GAME_OVER_NOTIFICATION,
-      winnerGameEndResponsePayloadData,
-      gameEndUser.socket.sequence,
-    );
-
-    const looserRegisterResponsePacket = createResponse(
-      PACKET_TYPE.GAME_OVER_NOTIFICATION,
-      looserGameEndResponsePayloadData,
-      otherUser.socket.sequence,
-    );
-
-    console.log(`winnerGameEndResponsePayloadData ${winnerGameEndResponsePayloadData}`);
-    console.log(`looserGameEndResponsePayloadData ${looserGameEndResponsePayloadData}`);
-
-    gameEndUser.socket.write(winnerRegisterResponsePacket);
-    otherUser.socket.write(looserRegisterResponsePacket);
+    otherUser.socket.write(loserRegisterResponsePacket);
   }
 }
