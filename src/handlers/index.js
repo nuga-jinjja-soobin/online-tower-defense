@@ -9,6 +9,7 @@ import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
 import { spawnMonsterHandler } from './monster/spawnMonsterHandler.js';
 import { enemyTowerAttackNotificationHandler, towerPurchaseHandler } from './tower/towerHandler.js';
+import { updateBaseHPNotification } from './base/baseHandler.js';
 
 const handlers = {
   [PACKET_TYPE.REGISTER_REQUEST]: {
@@ -34,6 +35,10 @@ const handlers = {
   [PACKET_TYPE.TOWER_ATTACK_REQUEST]: {
     handler: enemyTowerAttackNotificationHandler,
     protoType: 'combat.C2STowerAttackRequest',
+  },
+  [PACKET_TYPE.MONSTER_ATTACK_BASE_REQUEST]: {
+    handler: updateBaseHPNotification,
+    protoType: 'combat.C2SMonsterAttackBaseRequest',
   },
 };
 

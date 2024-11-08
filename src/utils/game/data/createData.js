@@ -1,5 +1,5 @@
 import { getGameAssets } from '../../../init/loadAssets.js';
-import { generateRandomMonsterPath } from '../../../handlers/monster/monsterPath.js';
+import { generateRandomMonsterPath } from './generateRandomMonsterPath.js';
 
 // 게임 세션에 유저의 초기 gameData를 세팅하는 함수
 export const createUserInitialData = (gameData, userData) => {
@@ -17,15 +17,8 @@ export const createUserInitialData = (gameData, userData) => {
     gold: gameAsset.initial.data.initalGold,
     score: gameAsset.initial.data.score,
     monsterLevel: gameAsset.initial.data.monsterLevel,
-    baseData: {
-      hp: baseHp,
-      maxHp: baseHp,
-    },
-    basePosition: {
-      x: baseX,
-      y: baseY,
-    },
     highScore: 0,
+    base: gameData[userData].base,
   };
 };
 
@@ -47,16 +40,27 @@ export const createUserData = (gameData, socket) => {
     monsterData.push({ monsterId, monsterNumber, level });
   }
 
+  //베이스 데이터 작성
+  const baseData = {
+    hp: gameData[socket].base.hp,
+    maxHp: gameData[socket].base.maxHp,
+  };
+
+  const basePosition = {
+    x: gameData[socket].base.x,
+    y: gameData[socket].base.y,
+  };
+
   const data = {
     gold: gameData[socket].gold,
-    base: gameData[socket].baseData,
+    base: baseData,
     highScore: gameData[socket].highScore,
     towers: towersData,
     monsters: monsterData,
     monsterLevel: gameData[socket].monsterLevel,
     score: gameData[socket].score,
     monsterPath: gameData[socket].monsterPath,
-    basePosition: gameData[socket].basePosition,
+    basePosition: basePosition,
   };
 
   return data;
