@@ -1,6 +1,7 @@
 import { getGameAssets } from '../../../init/loadAssets.js';
 import { generateRandomMonsterPath } from '../../../handlers/monster/monsterPath.js';
 
+// 게임 세션에 유저의 초기 gameData를 세팅하는 함수
 export const createUserInitialData = (gameData, userData) => {
   const gameAsset = getGameAssets();
   const baseHp = gameAsset.initial.data.baseHp;
@@ -26,6 +27,39 @@ export const createUserInitialData = (gameData, userData) => {
     },
     highScore: 0,
   };
+};
+
+// 사용자의 gameData를 생성하는 함수
+export const createUserData = (gameData, socket) => {
+  // towers, monsters 각 인스턴스에서 필요한 값만 매핑
+  let towersData = [];
+  for (let i in gameData[socket].towers) {
+    const towerId = gameData[socket].towers[i].towerId;
+    const x = gameData[socket].towers[i].x;
+    const y = gameData[socket].towers[i].y;
+    towersData.push({ towerId, x, y });
+  }
+  let monsterData = [];
+  for (let i in gameData[socket].monsters) {
+    const monsterId = gameData[socket].monsters[i].monsterId;
+    const monsterNumber = gameData[socket].monsters[i].monsterNumber;
+    const level = gameData[socket].monsters[i].level;
+    monsterData.push({ monsterId, monsterNumber, level });
+  }
+
+  const data = {
+    gold: gameData[socket].gold,
+    base: gameData[socket].baseData,
+    highScore: gameData[socket].highScore,
+    towers: towersData,
+    monsters: monsterData,
+    monsterLevel: gameData[socket].monsterLevel,
+    score: gameData[socket].score,
+    monsterPath: gameData[socket].monsterPath,
+    basePosition: gameData[socket].basePosition,
+  };
+
+  return data;
 };
 
 export const createInitialGameData = () => {
