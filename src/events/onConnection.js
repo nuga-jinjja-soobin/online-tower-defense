@@ -14,7 +14,6 @@ export const onConnection = (socket) => {
   socket.buffer = Buffer.alloc(0);
   // 각 클라이언트의 패킷순서를 보장하기 위한 순서 생성
   socket.sequence = 0;
-  console.log(socket.sequence);
 
   socket.on('data', onData(socket));
   socket.on('end', onEnd(socket));
