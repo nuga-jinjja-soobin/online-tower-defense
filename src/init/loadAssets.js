@@ -28,9 +28,12 @@ const readFileAsync = (filename) => {
 // 동기적으로 읽으면 읽기 순서를 대기해야하므로 시간이 오래걸림
 export const loadGameAssets = async () => {
   try {
-    const [initial] = await Promise.all([readFileAsync('initial.json')]);
+    const [initial, monster] = await Promise.all([
+      readFileAsync('initial.json'),
+      readFileAsync('monster.json'),
+    ]);
 
-    gameAssets = { initial };
+    gameAssets = { initial, monster };
     return gameAssets;
   } catch (e) {
     throw new Error('Failed to load game assets: ' + e.message);
