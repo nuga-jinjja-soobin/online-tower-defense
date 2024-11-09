@@ -231,38 +231,5 @@ export class Game {
       );
       enemyUser.socket.write(enemyUserResponsePacket);
     }
-  }
-
-  endGame(gameEndUser) {
-    this.state = GAME_STATE.END;
-
-    // 나를 제외한 상대방을 찾는다.
-    const otherUser = findUserExceptMe(gameEndUser.id);
-    if (!otherUser) {
-      console.log('게임에 참여중인 상대방이 없음');
-      return;
-    }
-
-    let winnerGameEndResponsePayloadData = { isWin: true };
-    let loserGameEndResponsePayloadData = { isWin: false };
-
-    // 나와 상대방에게 게임 끝 패킷을 보낸다.
-    const winnerRegisterResponsePacket = createResponse(
-      PACKET_TYPE.GAME_OVER_NOTIFICATION,
-      winnerGameEndResponsePayloadData,
-      gameEndUser.socket.sequence,
-    );
-
-    const loserRegisterResponsePacket = createResponse(
-      PACKET_TYPE.GAME_OVER_NOTIFICATION,
-      loserGameEndResponsePayloadData,
-      otherUser.socket.sequence,
-    );
-
-    // console.log(`winnerGameEndResponsePayloadData ${winnerGameEndResponsePayloadData}`);
-    // console.log(`loserGameEndResponsePayloadData ${loserGameEndResponsePayloadData}`);
-
-    gameEndUser.socket.write(winnerRegisterResponsePacket);
-    otherUser.socket.write(loserRegisterResponsePacket);
-  }
+  } 
 }
