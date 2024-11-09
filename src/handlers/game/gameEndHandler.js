@@ -23,8 +23,8 @@ export const gameEndHandler = async ({ socket, payload }) => {
     return;
   }
 
-  const otherUser = findGame.findUserExceptMe(gameEndUser.id);
-  if (!otherUser) {
+  const opponetUser = findGame.findUserExceptMe(gameEndUser.id);
+  if (!opponetUser) {
     console.log('상대방을 못찾음');
     return;
   }
@@ -32,5 +32,5 @@ export const gameEndHandler = async ({ socket, payload }) => {
   removeGameSession(gameEndHandler.gameSessionId);
 
   gameEndUser.gameSessionId = null;
-  otherUser.gameSessionId = null;  
+  opponetUser.gameSessionId = null;  
 };
