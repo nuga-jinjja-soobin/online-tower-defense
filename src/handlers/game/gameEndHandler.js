@@ -4,6 +4,8 @@
 // 4. 게임을 끝낸다.
 // 5. 게임 끝난 유저와 상대방에게 게임 종료 응답 패킷을 보내준다.
 
+import { removeGameSession } from "../../sessions/gameSession.js";
+
 export const gameEndHandler = async ({ socket, payload }) => {
   console.log('gameEndHandler 작동 완료');
 
@@ -19,8 +21,16 @@ export const gameEndHandler = async ({ socket, payload }) => {
   if (!findGame) {
     console.log('게임을 못찾음');
     return;
-  }  
+  }
 
-  // 게임을 끝낸다.
-  findGame.endGame(gameEndUser);   
+  const opponetUser = findGame.findUserExceptMe(gameEndUser.id);
+  if (!opponetUser) {
+    console.log('상대방을 못찾음');
+    return;
+  }
+
+  removeGameSession(gameEndHandler.gameSessionId);
+
+  gameEndUser.gameSessionId = null;
+  opponetUser.gameSessionId = null;  
 };

@@ -2,6 +2,8 @@
 // 핸들러 동작이 끝나면 처리되도록 하고 싶음.. onData => await handler({socket, data}) 이후
 
 import { PACKET_TYPE } from '../../constants/header.js';
+import { getGameSession } from '../../sessions/gameSession.js';
+import { getUserBySocket } from '../../sessions/userSessions.js';
 import { createSyncData } from '../../utils/game/data/createData.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -45,6 +47,18 @@ class PostProcessManager {
         break;
       // 추가 후속 처리 유형 추가 가능함
       case 2:
+        // 후속처리 유형 2: 타워 구매 정보 opponentUser에게 패킷 전송
+        const user = getUserBySocket(socket);
+        const userId = socket.userId;
+        const gameSession = getGameSession(user.gameSessionId);
+        gameSession.gameData[userId].gold -= gameSession.assets.initial.data.towerCost;
+        const opponentUser = gameSession.users.find((user) => user.id !== userId);
+        const ResponsePacket = createResponse(
+          PACKET_TYPE.ADD_ENEMY_TOWER_NOTIFICATION,
+          data,
+          opponentUser.socket.sequence,
+        );
+        opponentUser.socket.write(ResponsePacket);
         break;
       default:
         console.log(`후속처리 유형 ${processType}이 등록되어 있지 않습니다.`);

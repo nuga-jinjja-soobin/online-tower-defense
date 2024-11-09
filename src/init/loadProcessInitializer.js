@@ -8,8 +8,14 @@ export const loadPacketTypeHandlers = async () => {
     PACKET_TYPE.MONSTER_ATTACK_BASE_REQUEST, // 몬스터가 기지 공격했을 때 기지 체력 갱신을 위한 동기화
   ];
 
+  const addOpponentTowerNotificationPacket = [PACKET_TYPE.TOWER_PURCHASE_REQUEST];
+
   // 후속 처리 유형을 1로 지정하여 상태 동기화 설정
   syncPacketTypes.forEach((packetType) => {
     PostProcessManager.GetInstance().registerPostProcess(packetType, 1); // 1번 후속 처리로 상태 동기화 설정
+  });
+
+  addOpponentTowerNotificationPacket.forEach((packetType) => {
+    PostProcessManager.GetInstance().registerPostProcess(packetType, 2); // 1번 후속 처리로 상태 동기화 설정
   });
 };
