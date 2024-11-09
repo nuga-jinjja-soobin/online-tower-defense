@@ -95,6 +95,14 @@ class DatabaseManager {
       loserId,
     ]);
   }
+  
+  async updateHighScore(userId,hishScore)
+  {
+    await this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_HIGH_SCORE,[
+      hishScore,
+      userId
+    ]);
+  }
 }
 
 export default DatabaseManager;
