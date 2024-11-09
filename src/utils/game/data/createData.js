@@ -1,10 +1,12 @@
 import { getGameAssets } from '../../../init/loadAssets.js';
+import DatabaseManager from '../../../managers/databaseManager.js';
 import { getGameSession } from '../../../sessions/gameSession.js';
 import { getUserBySocket } from '../../../sessions/userSessions.js';
-import { generateRandomMonsterPath } from './generateRandomMonsterPath.js';
+import { generateRandomMonsterPath } from './randomPath.js';
 
 // 게임 세션에 유저의 초기 gameData를 세팅하는 함수
-export const createUserInitialData = (gameData, userId) => {
+export const createUserInitialData = async (gameData, userId) => {
+  const user = await DatabaseManager.GetInstance().findUserByUserId(userId);
   const gameAsset = getGameAssets();
   const baseHp = gameAsset.initial.data.baseHp;
 
@@ -17,7 +19,7 @@ export const createUserInitialData = (gameData, userId) => {
     gold: gameAsset.initial.data.initalGold,
     score: gameAsset.initial.data.score,
     monsterLevel: gameAsset.initial.data.monsterLevel,
-    highScore: 0,
+    highScore: user.highScore,
     base: gameData[userId].base,
   };
   console.log(`${userId}의 초기데이터: `, gameData[userId]);

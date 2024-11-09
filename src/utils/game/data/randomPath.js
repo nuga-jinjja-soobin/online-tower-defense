@@ -21,3 +21,22 @@ export const generateRandomMonsterPath = () => {
   }
   return path;
 };
+
+export const getRandomPositionNearPath = (path) => {
+  const maxDistance = 100;
+  // 타워 배치를 위한 몬스터가 지나가는 경로 상에서 maxDistance 범위 내에서 랜덤한 위치를 반환하는 함수!
+  const segmentIndex = Math.floor(Math.random() * (path.length - 1));
+  const startX = path[segmentIndex].x;
+  const startY = path[segmentIndex].y;
+  const endX = path[segmentIndex + 1].x;
+  const endY = path[segmentIndex + 1].y;
+  const t = Math.random();
+  const posX = startX + t * (endX - startX);
+  const posY = startY + t * (endY - startY);
+  const offsetX = (Math.random() - 0.5) * 2 * maxDistance;
+  const offsetY = (Math.random() - 0.5) * 2 * maxDistance;
+  const x = posX + offsetX;
+  const y = posY + offsetY;
+  // 타워 생성
+  return [x, y];
+};

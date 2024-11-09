@@ -70,12 +70,12 @@ export const onData = (socket) => async (data) => {
         socket.buffer = socket.buffer.subarray(offset + payloadLength);
         console.log(packetType, payload);
         const handler = getHandlerByPacketType(packetType);
-        await handler({ socket, payload });
+        const data = await handler({ socket, payload });
 
         // 후속 처리 유형 확인 후 실행
         const processType = PostProcessManager.GetInstance().getPostProcessType(packetType);
         if (processType !== undefined) {
-          await PostProcessManager.GetInstance().executePostProcess(socket, processType);
+          await PostProcessManager.GetInstance().executePostProcess(socket, processType, data);
         }
         break;
       } catch (e) {
