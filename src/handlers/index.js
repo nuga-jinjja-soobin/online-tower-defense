@@ -9,7 +9,10 @@ import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
 import { enemyMonsterDeathNotification, spawnMonsterHandler } from './monster/monsterHandler.js';
 import { gameEndHandler } from './game/gameEndHandler.js';
-import { enemyTowerAttackNotificationHandler, towerPurchaseHandler } from './tower/towerHandler.js';
+import {
+  opponentTowerAttackNotificationHandler,
+  towerPurchaseHandler,
+} from './tower/towerHandler.js';
 import { updateBaseHPNotification } from './base/baseHandler.js';
 
 const handlers = {
@@ -34,7 +37,7 @@ const handlers = {
     protoType: 'combat.C2STowerPurchaseRequest',
   },
   [PACKET_TYPE.TOWER_ATTACK_REQUEST]: {
-    handler: enemyTowerAttackNotificationHandler,
+    handler: opponentTowerAttackNotificationHandler,
     protoType: 'combat.C2STowerAttackRequest',
   },
   [PACKET_TYPE.GAME_END_REQUEST]: {

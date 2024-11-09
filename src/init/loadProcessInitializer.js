@@ -11,8 +11,14 @@ export const loadPacketTypeHandlers = async () => {
     PACKET_TYPE.MONSTER_ATTACK_BASE_REQUEST,
   ];
 
+  const addOpponentTowerNotificationPacket = [PACKET_TYPE.TOWER_PURCHASE_REQUEST];
+
   // 후속 처리 유형을 1로 지정하여 상태 동기화 설정
   syncPacketTypes.forEach((packetType) => {
     PostProcessManager.GetInstance().registerPostProcess(packetType, 1); // 1번 후속 처리로 상태 동기화 설정
+  });
+
+  addOpponentTowerNotificationPacket.forEach((packetType) => {
+    PostProcessManager.GetInstance().registerPostProcess(packetType, 2); // 1번 후속 처리로 상태 동기화 설정
   });
 };
