@@ -12,4 +12,6 @@ export const USER_SQL_QUERIES = {
   UPDATE_USER_LOGIN: `UPDATE users SET lastLogin = CURRENT_TIMESTAMP WHERE userId = ?`,
 
   CREATE_GAME_HISTORY_WIN: `INSERT INTO game_histories (winner, loser) VALUES (?, ?)`,
+
+  UPDATE_HIGH_SCORE: `UPDATE users SET highScore = ? WHERE userId = ?`
 };
