@@ -94,7 +94,6 @@ export class Game {
       this.gameData[socket.userId].monsters = [];
     }
     this.gameData[socket.userId].monsters.push(monster);
-    this.spawnEnemyMonsterNotification(socket, monster.monsterId, monster.monsterNumber);
     return monster;
   }
 

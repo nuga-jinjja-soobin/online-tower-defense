@@ -6,7 +6,7 @@ import { ErrorCodes } from '../../utils/errors/errorCodes.js';
 import { handleError } from '../../utils/errors/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
-export const spawnMonsterHandler = ({ socket, payload }) => {
+export const spawnMonsterHandler = async ({ socket, payload }) => {
   try {
     // 유저 검색 (검증 추가 필요)
     const user = getUserBySocket(socket);
@@ -41,12 +41,14 @@ export const spawnMonsterHandler = ({ socket, payload }) => {
     );
 
     socket.write(spawnMonsterPacket);
+
+    gameSession.spawnEnemyMonsterNotification(socket, monster.monsterId, monster.monsterNumber);
   } catch (error) {
     handleError(socket, error);
   }
 };
 
-export const enemyMonsterDeathNotification = ({ socket, payload }) => {
+export const enemyMonsterDeathNotification = async ({ socket, payload }) => {
   try {
     console.log(`------enemyMonsterDeathNotification 핸들러 작동------`);
     const monsterId = payload.monsterId;
