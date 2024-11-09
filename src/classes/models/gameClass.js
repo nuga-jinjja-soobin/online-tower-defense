@@ -1,6 +1,6 @@
 import { MAX_PLAYER_TO_GAME_SESSIONS } from '../../constants/env.js';
 import { GAME_STATE } from '../../constants/state.js';
-import { createUserInitialData, createUserData } from '../../utils/game/data/createData.js';
+import { createUserInitialData, createUserData, createSyncData } from '../../utils/game/data/createData.js';
 import { Monster } from './monsterClass.js';
 import { generateRandomMonsterPath } from '../../utils/game/data/generateRandomMonsterPath.js';
 import { getRandomPositionNearPath } from '../../handlers/tower/towerHandler.js';
@@ -9,6 +9,7 @@ import Tower from './towerClass.js';
 import { getGameAssets } from '../../init/loadAssets.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 import Base from './baseClass.js';
+import DatabaseManager from '../../managers/databaseManager.js';
 
 export class Game {
   constructor(id) {
@@ -87,14 +88,38 @@ export class Game {
   }
 
   // gameData.userId.monsters에 몬스터 추가
-  spawnMonster(socket) {
+  spawnMonster(user) {
     const monster = new Monster(this.monsterId);
     this.monsterId++;
-    if (!this.gameData[socket.userId].monsters) {
-      this.gameData[socket.userId].monsters = [];
+    if (!this.gameData[user.id].monsters) {
+      this.gameData[user.id].monsters = [];
     }
-    this.gameData[socket.userId].monsters.push(monster);
-    this.spawnEnemyMonsterNotification(socket, monster.monsterId, monster.monsterNumber);
+    this.gameData[user.id].monsters.push(monster);
+
+    const spawnMonsterPacket = createResponse(
+      PACKET_TYPE.SPAWN_MONSTER_RESPONSE,
+      {
+        monsterId:monster.monsterId,
+        monsterNumber: monster.monsterNumber,
+      },
+      user.socket.sequence
+    );
+
+    user.socket.write(spawnMonsterPacket);
+
+    const otherUser = this.users.find((otherUser) => otherUser.id !== user.id);
+    const enemySpawnMonsterPacket = createResponse(
+      PACKET_TYPE.SPAWN_ENEMY_MONSTER_NOTIFICATION,
+      {
+        monsterId:monster.monsterId,
+        monsterNumber: monster.monsterNumber,
+      },
+      otherUser.socket.sequence
+    );
+
+    otherUser.socket.write(enemySpawnMonsterPacket);   
+
+    //this.spawnEnemyMonsterNotification(socket, monster.monsterId, monster.monsterNumber);
     return monster;
   }
 
@@ -231,38 +256,5 @@ export class Game {
       );
       enemyUser.socket.write(enemyUserResponsePacket);
     }
-  }
-
-  endGame(gameEndUser) {
-    this.state = GAME_STATE.END;
-
-    // 나를 제외한 상대방을 찾는다.
-    const otherUser = findUserExceptMe(gameEndUser.id);
-    if (!otherUser) {
-      console.log('게임에 참여중인 상대방이 없음');
-      return;
-    }
-
-    let winnerGameEndResponsePayloadData = { isWin: true };
-    let loserGameEndResponsePayloadData = { isWin: false };
-
-    // 나와 상대방에게 게임 끝 패킷을 보낸다.
-    const winnerRegisterResponsePacket = createResponse(
-      PACKET_TYPE.GAME_OVER_NOTIFICATION,
-      winnerGameEndResponsePayloadData,
-      gameEndUser.socket.sequence,
-    );
-
-    const loserRegisterResponsePacket = createResponse(
-      PACKET_TYPE.GAME_OVER_NOTIFICATION,
-      loserGameEndResponsePayloadData,
-      otherUser.socket.sequence,
-    );
-
-    // console.log(`winnerGameEndResponsePayloadData ${winnerGameEndResponsePayloadData}`);
-    // console.log(`loserGameEndResponsePayloadData ${loserGameEndResponsePayloadData}`);
-
-    gameEndUser.socket.write(winnerRegisterResponsePacket);
-    otherUser.socket.write(loserRegisterResponsePacket);
-  }
+  }  
 }
