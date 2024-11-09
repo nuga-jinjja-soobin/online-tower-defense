@@ -1,0 +1,11 @@
+{
+  "name": "monster",
+  "version": "1.0.0",
+  "data": [
+    { "monsterLevel": 1, "score": 10, "gold": 100 },
+    { "monsterLevel": 2, "score": 20, "gold": 200 },
+    { "monsterLevel": 3, "score": 30, "gold": 300 },
+    { "monsterLevel": 4, "score": 40, "gold": 400 },
+    { "monsterLevel": 5, "score": 50, "gold": 500 }
+  ]
+}

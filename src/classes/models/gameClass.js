@@ -114,12 +114,18 @@ export class Game {
     responseUser.socket.write(ResponsePacket);
   }
 
+  // 몬스터 사망 및 골드 & 점수 증가
   dieMonsterCheck(userId, monsterId) {
-    this.gameData[userId].monster = this.gameData[userId].monsters.filter((monster) => {
-      if (monster.id !== monsterId) {
+    this.gameData[userId].monsters = this.gameData[userId].monsters.filter((monster) => {
+      if (monster.monsterId !== monsterId) {
         return monster;
       } else {
         this.monstersDie.push(monster);
+        const monsterData = this.assets.monster.data.find(
+          (data) => data.monsterLevel === monster.level,
+        );
+        this.gameData[userId].gold += monsterData.gold;
+        this.gameData[userId].score += monsterData.score;
       }
     });
   }

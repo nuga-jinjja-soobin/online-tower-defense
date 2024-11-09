@@ -8,7 +8,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 
 export const spawnMonsterHandler = async ({ socket, payload }) => {
   try {
-    // 유저 검색 (검증 추가 필요)
+    // 유저 검색
     const user = getUserBySocket(socket);
     if (!user) {
       throw new CustomError(
@@ -18,7 +18,7 @@ export const spawnMonsterHandler = async ({ socket, payload }) => {
       );
     }
 
-    // 유저가 참여한 세션 검색 (검증 추가 필요)
+    // 유저가 참여한 세션 검색
     const gameSession = getGameSession(user.gameSessionId);
     if (!gameSession) {
       throw new CustomError(
