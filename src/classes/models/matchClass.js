@@ -62,9 +62,8 @@ class Match {
             user.state = USER_STATE.INGAME;
             matchedUser.state = USER_STATE.INGAME;
 
-            // gameSession.users.push(user, matchedUser);
-            gameSession.addUser(user);
-            gameSession.addUser(matchedUser);
+            await gameSession.addUser(user);
+            await gameSession.addUser(matchedUser);
 
             const userCallback = this.matchCallbacks.get(user.socket);
             const matchedUserCallback = this.matchCallbacks.get(matchedUser.socket);
