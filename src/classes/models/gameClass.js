@@ -27,12 +27,12 @@ export class Game {
   // 게임 방에 유저 추가 메서드
   // 1. 게임 방에 유저가 추가되는 메서드
   // 2. 유저 추가 후 게임 세션 최대 인원이면 게임이 시작되도록 설정
-  addUser(user) {
+  async addUser(user) {
     this.users.push(user);
     user.gameSessionId = this.id;
 
     if (this.users.length >= MAX_PLAYER_TO_GAME_SESSIONS) {
-      this.startGame();
+      await this.startGame();
     }
   }
 
@@ -73,7 +73,7 @@ export class Game {
         this.gameData[userId].paths[index].y,
         this.assets.initial.data.baseHp,
       );
-      createUserInitialData(this.gameData, userId);
+      await createUserInitialData(this.gameData, userId);
     }
   }
 
@@ -96,7 +96,6 @@ export class Game {
       this.gameData[socket.userId].monsters = [];
     }
     this.gameData[socket.userId].monsters.push(monster);
-    this.spawnEnemyMonsterNotification(socket, monster.monsterId, monster.monsterNumber);
     return monster;
   }
 
@@ -216,5 +215,5 @@ export class Game {
       );
       opponentUser.socket.write(opponentUserResponsePacket);
     }
-  } 
+  }
 }
