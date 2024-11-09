@@ -11,6 +11,7 @@ import Tower from './towerClass.js';
 import { getGameAssets } from '../../init/loadAssets.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 import Base from './baseClass.js';
+import { removeGameSession } from '../../sessions/gameSession.js';
 
 export class Game {
   constructor(id) {
@@ -37,16 +38,7 @@ export class Game {
   }
 
   gameRemoveUser(id) {
-    this.users = this.users.filter((user) => user.id !== id);
-  }
-
-  findUserExceptMe(exceptId) {
-    const findUser = this.users.find((user) => user.id !== exceptId);
-    return findUser;
-  }
-
-  gameRemoveUser(id) {
-    this.users = this.users.filter((user) => user.id !== id);
+    this.users = this.users.filter((user) => user.id !== id);  
   }
 
   findUserExceptMe(exceptId) {
@@ -174,7 +166,7 @@ export class Game {
     return base;
   }
 
-  updateBaseHPNotification(socket, damage) {
+  async updateBaseHPNotification(socket, damage) {
     const userId = socket.userId;
     // 베이스 피격
     console.log('-------------------------------------------------', this.gameData[userId].base);
@@ -203,7 +195,9 @@ export class Game {
     );
     opponentUser.socket.write(opponentUserResponsePacket);
 
-    if (this.gameData[userId].base.hp < 0) {
+    if (this.gameData[userId].base.hp <= 0) {
+      this.gameData[userId].base.hp = 0;
+
       const userResponsePacket = createResponse(
         PACKET_TYPE.GAME_OVER_NOTIFICATION,
         {
@@ -212,6 +206,7 @@ export class Game {
         socket.sequence,
       );
       socket.write(userResponsePacket);
+
       const opponentUserResponsePacket = createResponse(
         PACKET_TYPE.GAME_OVER_NOTIFICATION,
         {
