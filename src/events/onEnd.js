@@ -20,6 +20,12 @@ export const onEnd = (socket) => async () => {
   let falseData = null;
 
   do {
+    // 접속 끊긴 대상의 gameSession이 없다면 나감
+    if(disconnectUser.gameSessionId === null)
+    {
+      break;
+    }
+    
     // 유저가 게임중
     if (disconnectUser.state === USER_STATE.INGAME) {
       // 접속 해제한 유저가 참여한 Game을 찾는다.
