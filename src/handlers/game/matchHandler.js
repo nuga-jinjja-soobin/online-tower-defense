@@ -1,10 +1,10 @@
 import { getUserBySocket } from '../../sessions/userSessions.js';
 import CustomError from '../../utils/errors/customError.js';
 import { ErrorCodes } from '../../utils/errors/errorCodes.js';
-import Match from '../../classes/models/matchClass.js';
-import { createInitialGameData } from '../../utils/game/data/createData.js';
+import Match from '../../classes/managers/matchingManager.js';
+import { createInitialGameData } from '../../utils/game/data/createGameData.js';
 import { getGameSession } from '../../sessions/gameSession.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/packet/response/createResponse.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
 export const matchHandler = async ({ socket, payload }) => {
@@ -27,8 +27,8 @@ export const matchHandler = async ({ socket, payload }) => {
     const gameSession = getGameSession(response.gameSessionId);
     const initialGameState = createInitialGameData();
     const [playerData, opponentData] = gameSession.getGameData(socket.userId, response.partnerId);
-    console.log(`${socket.userId} 본인의 데이터: `, playerData);
-    console.log(`${response.partnerId} 적의 데이터: `, opponentData);
+    // console.log(`${socket.userId} 본인의 데이터: `, playerData);
+    // console.log(`${response.partnerId} 적의 데이터: `, opponentData);
 
     const S2CMatchStartNotificationResponse = createResponse(
       PACKET_TYPE.MATCH_START_NOTIFICATION,

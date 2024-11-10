@@ -1,12 +1,12 @@
 import { MAX_PLAYER_TO_GAME_SESSIONS } from '../../constants/env.js';
 import { GAME_STATE } from '../../constants/state.js';
-import { createUserInitialData, createUserData } from '../../utils/game/data/createData.js';
+import { createUserInitialData, createUserData } from '../../utils/game/data/createGameData.js';
 import { Monster } from './monsterClass.js';
 import {
   generateRandomMonsterPath,
   getRandomPositionNearPath,
-} from '../../utils/game/data/randomPath.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+} from '../../utils/game/data/generatePath.js';
+import { createResponse } from '../../utils/packet/response/createResponse.js';
 import Tower from './towerClass.js';
 import { getGameAssets } from '../../init/loadAssets.js';
 import { PACKET_TYPE } from '../../constants/header.js';
@@ -18,8 +18,8 @@ export class Game {
     this.users = [];
     this.gameData = {};
     this.monstersDie = [];
-    this.monsterId = 0;
-    this.towerId = 0;
+    this.monsterId = 1;
+    this.towerId = 1;
     this.assets = getGameAssets();
     this.state = GAME_STATE.WAITING;
   }
@@ -34,15 +34,6 @@ export class Game {
     if (this.users.length >= MAX_PLAYER_TO_GAME_SESSIONS) {
       await this.startGame();
     }
-  }
-
-  gameRemoveUser(id) {
-    this.users = this.users.filter((user) => user.id !== id);
-  }
-
-  findUserExceptMe(exceptId) {
-    const findUser = this.users.find((user) => user.id !== exceptId);
-    return findUser;
   }
 
   gameRemoveUser(id) {
@@ -174,10 +165,9 @@ export class Game {
     return base;
   }
 
-  updateBaseHPNotification(socket, damage) {
+  async updateBaseHPNotification(socket, damage) {
     const userId = socket.userId;
     // 베이스 피격
-    console.log('-------------------------------------------------', this.gameData[userId].base);
     this.gameData[userId].base.hitBase(damage);
 
     // 피격 정보 전송
@@ -203,7 +193,9 @@ export class Game {
     );
     opponentUser.socket.write(opponentUserResponsePacket);
 
-    if (this.gameData[userId].base.hp < 0) {
+    if (this.gameData[userId].base.hp <= 0) {
+      this.gameData[userId].base.hp = 0;
+
       const userResponsePacket = createResponse(
         PACKET_TYPE.GAME_OVER_NOTIFICATION,
         {
@@ -212,6 +204,7 @@ export class Game {
         socket.sequence,
       );
       socket.write(userResponsePacket);
+
       const opponentUserResponsePacket = createResponse(
         PACKET_TYPE.GAME_OVER_NOTIFICATION,
         {

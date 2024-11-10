@@ -1,6 +1,6 @@
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/packet/response/createResponse.js';
 import { PACKET_TYPE } from '../../constants/header.js';
-import DatabaseManager from '../../managers/databaseManager.js';
+import DatabaseManager from '../../classes/managers/databaseManager.js';
 import { handleError } from '../../utils/errors/errorHandler.js';
 import CustomError from '../../utils/errors/customError.js';
 import { ErrorCodes } from '../../utils/errors/errorCodes.js';

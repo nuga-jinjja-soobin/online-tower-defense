@@ -2,8 +2,8 @@ import { getUserBySocket } from '../sessions/userSessions.js';
 import { getGameSession } from '../sessions/gameSession.js';
 import { removeUser } from '../sessions/userSessions.js';
 import { USER_STATE } from '../constants/state.js';
-import DatabaseManager from '../managers/databaseManager.js';
-import { createResponse } from '../utils/response/createResponse.js';
+import DatabaseManager from '../classes/managers/databaseManager.js';
+import { createResponse } from '../utils/packet/response/createResponse.js';
 import { PACKET_TYPE } from '../constants/header.js';
 
 // 접속 해제 시 시퀀스
@@ -20,6 +20,11 @@ export const onEnd = (socket) => async () => {
   let falseData = null;
 
   do {
+    // 접속 끊긴 대상의 gameSession이 없다면 나감
+    if (disconnectUser.gameSessionId === null) {
+      break;
+    }
+
     // 유저가 게임중
     if (disconnectUser.state === USER_STATE.INGAME) {
       // 접속 해제한 유저가 참여한 Game을 찾는다.

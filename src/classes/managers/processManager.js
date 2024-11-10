@@ -4,8 +4,8 @@
 import { PACKET_TYPE } from '../../constants/header.js';
 import { getGameSession } from '../../sessions/gameSession.js';
 import { getUserBySocket } from '../../sessions/userSessions.js';
-import { createSyncData } from '../../utils/game/data/createData.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createSyncData } from '../../utils/game/data/createGameData.js';
+import { createResponse } from '../../utils/packet/response/createResponse.js';
 
 class PostProcessManager {
   static gInstance = null;
@@ -37,7 +37,7 @@ class PostProcessManager {
       case 1:
         // 후속처리 유형 1: 상태 동기화 패킷 전송
         const syncNotiData = createSyncData(socket);
-        console.log(`${socket.userId}의 syncNotiData: `, syncNotiData);
+        // console.log(`${socket.userId}의 syncNotiData: `, syncNotiData);
         const syncPacket = createResponse(
           PACKET_TYPE.STATE_SYNC_NOTIFICATION,
           syncNotiData,

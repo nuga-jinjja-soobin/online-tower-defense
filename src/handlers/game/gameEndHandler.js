@@ -7,7 +7,7 @@
 import { removeGameSession } from '../../sessions/gameSession.js';
 import { getUserBySocket } from '../../sessions/userSessions.js';
 import { getGameSession } from '../../sessions/gameSession.js';
-import DatabaseManager from '../../classes/managers/databaseManager.js';
+import DatabaseManager from '../../managers/databaseManager.js';
 
 export const gameEndHandler = async ({ socket, payload }) => {
   console.log('gameEndHandler 작동 완료');
@@ -24,24 +24,16 @@ export const gameEndHandler = async ({ socket, payload }) => {
   if (!findGame) {
     console.log('게임을 못찾음');
     return;
-  } else {
-    const opponentUser = findGame.findUserExceptMe(gameEndUser.id);
-    if (!opponentUser) {
-      console.log('상대방 유저를 찾지 못함');
-      return;
-    }
-
-    DatabaseManager.GetInstance().updateHighScore(
-      gameEndUser.id,
-      findGame.gameData[gameEndUser.id].score,
-    );
-    DatabaseManager.GetInstance().updateHighScore(
-      opponentUser.id,
-      findGame.gameData[opponentUser.id].score,
-    );
-
-    removeGameSession(findGame.id);
   }
 
+  const opponetUser = findGame.findUserExceptMe(gameEndUser.id);
+  if (!opponetUser) {
+    console.log('상대방을 못찾음');
+    return;
+  }
+
+  removeGameSession(gameEndHandler.gameSessionId);
+
   gameEndUser.gameSessionId = null;
+  opponetUser.gameSessionId = null;
 };

@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
 import { config } from '../../config/config.js';
 import { formatDate } from '../../utils/dateFormatter.js';
-import { USER_SQL_QUERIES } from '../../database/mysql/user/user.queries.js';
+import { USER_SQL_QUERIES } from '../../database/query/user/user.queries.js';
 
 // 싱글턴
 class DatabaseManager {
@@ -94,6 +94,10 @@ class DatabaseManager {
       winnerId,
       loserId,
     ]);
+  }
+
+  async updateHighScore(userId, hishScore) {
+    await this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_HIGH_SCORE, [hishScore, userId]);
   }
 }
 
