@@ -8,7 +8,6 @@
  * 2. header.js
  */
 
-import { PORT, HOST, CLIENT_VERSION, JWT_KEY, JWT_EXPIRES } from '../constants/env.js';
 import {
   PACKET_TYPE_LENGTH,
   TOTAL_HEADER_LENGTH,
@@ -17,6 +16,11 @@ import {
   PAYLOAD_LENGTH,
 } from '../constants/header.js';
 import {
+  PORT,
+  HOST,
+  CLIENT_VERSION,
+  JWT_KEY,
+  JWT_EXPIRES,
   DB1_NAME,
   DB1_USER,
   DB1_PASSWORD,
@@ -27,6 +31,9 @@ import {
   DB2_PASSWORD,
   DB2_HOST,
   DB2_PORT,
+  REDIS_HOST,
+  REDIS_PASSWORD,
+  REDIS_PORT,
 } from '../constants/env.js';
 
 export const config = {
@@ -64,5 +71,10 @@ export const config = {
   jwt: {
     key: JWT_KEY,
     expires: JWT_EXPIRES,
+  },
+  redis: {
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    password: REDIS_PASSWORD,
   },
 };

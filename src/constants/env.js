@@ -18,6 +18,10 @@ export const DB2_PASSWORD = process.env.DB2_PASSWORD || 'aaaa4321';
 export const DB2_HOST = process.env.DB2_HOST || '127.0.0.1';
 export const DB2_PORT = process.env.DB2_PORT || 3307;
 
+export const REDIS_HOST = process.env.REDIS_HOST || null;
+export const REDIS_PASSWORD = process.env.REDIS_PASSWORD || null;
+export const REDIS_PORT = process.env.REDIS_PORT || null;
+
 export const JWT_KEY = process.env.JWT_SECRET_KEY || 'secretkey';
 export const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '1d';
 

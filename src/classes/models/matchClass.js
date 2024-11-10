@@ -48,11 +48,13 @@ class Match {
         if (user.state === USER_STATE.MATCHING) {
           const matchedUser = this.findmatchedUser(user);
 
+          let gameId;
+
           if (matchedUser) {
             // 시작 전 게임 세션 확인 및 추가
             let gameSession = findWaitingGameSessions();
             if (!gameSession) {
-              const gameId = uuidv4();
+              gameId = uuidv4();
               gameSession = addGameSession(gameId);
               console.log(`새로운 게임 세션 생성: ${gameId}`);
             } else {
