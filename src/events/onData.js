@@ -1,7 +1,7 @@
 import { config } from '../config/config.js';
 import { getHandlerByPacketType } from '../handlers/index.js';
 import { handleError } from '../utils/errors/errorHandler.js';
-import { packetParser } from '../utils/parser/packetParser.js';
+import { packetParser } from '../utils/packet/parser/packetParser.js';
 import PostProcessManager from '../classes/managers/processManager.js';
 import { validateSequence } from '../utils/socket/sequence.js';
 import CustomError from '../utils/errors/customError.js';
@@ -58,12 +58,12 @@ export const onData = (socket) => async (data) => {
       // 7. 페이로드 (payloadLength bytes)
       const payloadBuffer = socket.buffer.subarray(offset, offset + payloadLength);
 
-      console.log(`Packet Type: ${packetType}`);
-      console.log(`Version Length: ${versionLength}`);
-      console.log(`Version: ${version}`);
-      console.log(`Sequence: ${sequence}`);
-      console.log(`Payload Length: ${payloadLength}`);
-      console.log(`payload: `, payloadBuffer);
+      // console.log(`Packet Type: ${packetType}`);
+      // console.log(`Version Length: ${versionLength}`);
+      // console.log(`Version: ${version}`);
+      // console.log(`Sequence: ${sequence}`);
+      // console.log(`Payload Length: ${payloadLength}`);
+      // console.log(`payload: `, payloadBuffer);
       try {
         const { payload } = packetParser(payloadBuffer);
 

@@ -22,7 +22,7 @@ export const createUserInitialData = async (gameData, userId) => {
     highScore: user.highScore,
     base: gameData[userId].base,
   };
-  console.log(`${userId}의 초기데이터: `, gameData[userId]);
+  // console.log(`${userId}의 초기데이터: `, gameData[userId]);
 };
 
 // 사용자의 gameData를 생성하는 함수

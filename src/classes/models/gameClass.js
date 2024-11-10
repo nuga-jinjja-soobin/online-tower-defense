@@ -168,7 +168,6 @@ export class Game {
   async updateBaseHPNotification(socket, damage) {
     const userId = socket.userId;
     // 베이스 피격
-    console.log('-------------------------------------------------', this.gameData[userId].base);
     this.gameData[userId].base.hitBase(damage);
 
     // 피격 정보 전송

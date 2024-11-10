@@ -50,7 +50,7 @@ export const spawnMonsterHandler = async ({ socket, payload }) => {
 
 export const enemyMonsterDeathNotification = async ({ socket, payload }) => {
   try {
-    console.log(`------enemyMonsterDeathNotification 핸들러 작동------`);
+    console.log(`enemyMonsterDeathNotification 핸들러 작동`);
     const monsterId = payload.monsterId;
     const socketUser = getUserBySocket(socket);
     if (!socketUser) {
