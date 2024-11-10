@@ -1,4 +1,4 @@
-import { createResponse } from '../response/createResponse.js';
+import { createResponse } from '../packet/response/createResponse.js';
 import { ErrorCodes } from './errorCodes.js';
 
 export const handleError = (socket, error, data = null) => {

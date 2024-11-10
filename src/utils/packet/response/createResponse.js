@@ -1,7 +1,7 @@
 /** 클라이언트에 응답을 해주기 위한 패킷을 생성해주는 스크립트 */
-import { config } from '../../config/config.js';
-import { getProtoMessages } from '../../init/loadProtos.js';
-import { PACKET_MAPS } from '../../protobufs/packetMaps.js';
+import { config } from '../../../config/config.js';
+import { getProtoMessages } from '../../../init/loadProtos.js';
+import { PACKET_MAPS } from '../../../protobufs/packetMaps.js';
 
 export const createResponse = (packetType, payloadData = {}, sequence) => {
   // 1. 패킷 타입

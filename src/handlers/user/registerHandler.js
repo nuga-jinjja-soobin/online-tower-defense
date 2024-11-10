@@ -1,6 +1,6 @@
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/packet/response/createResponse.js';
 import { PACKET_TYPE } from '../../constants/header.js';
-import DatabaseManager from '../../managers/databaseManager.js';
+import DatabaseManager from '../../classes/managers/databaseManager.js';
 import bcrypt from 'bcrypt';
 
 export const registerHandler = async ({ socket, payload }) => {

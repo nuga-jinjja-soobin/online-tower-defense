@@ -1,10 +1,10 @@
 import { getUserBySocket } from '../../sessions/userSessions.js';
 import CustomError from '../../utils/errors/customError.js';
 import { ErrorCodes } from '../../utils/errors/errorCodes.js';
-import Match from '../../classes/models/matchClass.js';
-import { createInitialGameData } from '../../utils/game/data/createData.js';
+import Match from '../../classes/managers/matchingManager.js';
+import { createInitialGameData } from '../../utils/game/data/createGameData.js';
 import { getGameSession } from '../../sessions/gameSession.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/packet/response/createResponse.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 
 export const matchHandler = async ({ socket, payload }) => {

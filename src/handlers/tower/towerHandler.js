@@ -2,7 +2,9 @@ import { PACKET_TYPE } from '../../constants/header.js';
 import { getGameSession } from '../../sessions/gameSession.js';
 import { getUserBySocket } from '../../sessions/userSessions.js';
 import { handleError } from '../../utils/errors/errorHandler.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/packet/response/createResponse.js';
+import CustomError from '../../utils/errors/customError.js';
+import { ErrorCodes } from '../../utils/errors/errorCodes.js';
 
 export const towerPurchaseHandler = ({ socket, payload }) => {
   try {
@@ -54,6 +56,7 @@ export const towerPurchaseHandler = ({ socket, payload }) => {
 
 export const opponentTowerAttackNotificationHandler = ({ socket, payload }) => {
   try {
+    // console.log(payload);
     // 게임 클래스 불러오기
     const user = getUserBySocket(socket);
     if (!user) {

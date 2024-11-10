@@ -1,8 +1,8 @@
 import { getGameAssets } from '../../../init/loadAssets.js';
-import DatabaseManager from '../../../managers/databaseManager.js';
+import DatabaseManager from '../../../classes/managers/databaseManager.js';
 import { getGameSession } from '../../../sessions/gameSession.js';
 import { getUserBySocket } from '../../../sessions/userSessions.js';
-import { generateRandomMonsterPath } from './randomPath.js';
+import { generateRandomMonsterPath } from './generatePath.js';
 
 // 게임 세션에 유저의 초기 gameData를 세팅하는 함수
 export const createUserInitialData = async (gameData, userId) => {

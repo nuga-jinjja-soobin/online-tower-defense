@@ -1,6 +1,6 @@
-import { getProtoMessages } from '../../init/loadProtos.js';
-import CustomError from '../errors/customError.js';
-import { ErrorCodes } from '../errors/errorCodes.js';
+import { getProtoMessages } from '../../../init/loadProtos.js';
+import CustomError from '../../errors/customError.js';
+import { ErrorCodes } from '../../errors/errorCodes.js';
 
 export const packetParser = (payload) => {
   // --------------------------------------------------
