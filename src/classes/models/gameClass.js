@@ -1,17 +1,16 @@
 import { MAX_PLAYER_TO_GAME_SESSIONS } from '../../constants/env.js';
 import { GAME_STATE } from '../../constants/state.js';
-import { createUserInitialData, createUserData } from '../../utils/game/data/createData.js';
+import { createUserInitialData, createUserData } from '../../utils/game/data/createGameData.js';
 import { Monster } from './monsterClass.js';
 import {
   generateRandomMonsterPath,
   getRandomPositionNearPath,
-} from '../../utils/game/data/randomPath.js';
-import { createResponse } from '../../utils/response/createResponse.js';
+} from '../../utils/game/data/generatePath.js';
+import { createResponse } from '../../utils/packet/response/createResponse.js';
 import Tower from './towerClass.js';
 import { getGameAssets } from '../../init/loadAssets.js';
 import { PACKET_TYPE } from '../../constants/header.js';
 import Base from './baseClass.js';
-import { removeGameSession } from '../../sessions/gameSession.js';
 
 export class Game {
   constructor(id) {
@@ -19,8 +18,8 @@ export class Game {
     this.users = [];
     this.gameData = {};
     this.monstersDie = [];
-    this.monsterId = 0;
-    this.towerId = 0;
+    this.monsterId = 1;
+    this.towerId = 1;
     this.assets = getGameAssets();
     this.state = GAME_STATE.WAITING;
   }
@@ -38,7 +37,7 @@ export class Game {
   }
 
   gameRemoveUser(id) {
-    this.users = this.users.filter((user) => user.id !== id);  
+    this.users = this.users.filter((user) => user.id !== id);
   }
 
   findUserExceptMe(exceptId) {
@@ -169,7 +168,6 @@ export class Game {
   async updateBaseHPNotification(socket, damage) {
     const userId = socket.userId;
     // 베이스 피격
-    console.log('-------------------------------------------------', this.gameData[userId].base);
     this.gameData[userId].base.hitBase(damage);
 
     // 피격 정보 전송

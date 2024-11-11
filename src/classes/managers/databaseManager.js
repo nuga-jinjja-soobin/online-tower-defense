@@ -1,7 +1,8 @@
 import mysql from 'mysql2/promise';
-import { config } from '../config/config.js';
-import { formatDate } from '../utils/dateFormatter.js';
-import { USER_SQL_QUERIES } from '../database/query/user/user.queries.js';
+import { config } from '../../config/config.js';
+import { USER_SQL_QUERIES } from '../../database/query/user/user.queries.js';
+import { ErrorCodes } from '../../utils/errors/errorCodes.js';
+import CustomError from '../../utils/errors/customError.js';
 
 // 싱글턴
 class DatabaseManager {
@@ -37,14 +38,6 @@ class DatabaseManager {
     const originalQuery = pool.query;
 
     pool.query = async (sql, params) => {
-      // 쿼리 실행시 로그
-      const date = new Date();
-      console.log(
-        `[${formatDate(date)}] Executing query: ${sql} ${
-          params ? `, ${JSON.stringify(params)}` : ``
-        }`,
-      );
-
       const result = await originalQuery.call(pool, sql, params);
       return result;
     };
@@ -55,9 +48,8 @@ class DatabaseManager {
   async testDBConnection(pool, dbName) {
     try {
       const [rows] = await pool.query('SELECT 1 + 1 AS solution');
-      console.log(`${dbName} 테스트 쿼리 결과:`, rows[0].solution);
     } catch (error) {
-      console.error(`${dbName} 테스트 쿼리 실행 중 오류 발생`, error);
+      throw new CustomError(ErrorCodes.DB_QUERY_ERROR, 'DB 쿼리 에러 발생');
     }
   }
 
@@ -95,13 +87,9 @@ class DatabaseManager {
       loserId,
     ]);
   }
-  
-  async updateHighScore(userId,hishScore)
-  {
-    await this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_HIGH_SCORE,[
-      hishScore,
-      userId
-    ]);
+
+  async updateHighScore(userId, hishScore) {
+    await this.pools['USER_DB'].query(USER_SQL_QUERIES.UPDATE_HIGH_SCORE, [hishScore, userId]);
   }
 }
 
