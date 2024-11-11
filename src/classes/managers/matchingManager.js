@@ -80,6 +80,10 @@ class Match {
             this.matchCallbacks.delete(matchedUser.socket);
           }
         }
+        // 매칭돌린 유저의 상태가 MATCHING이 아닌 경우 매칭 대기열에서 삭제
+        else {
+          this.users = this.users.filter((u) => u !== user);
+        }
       }
 
       // 매칭할 유저가 없다면 루프를 중지
