@@ -8,10 +8,8 @@ import { ErrorCodes } from '../../utils/errors/errorCodes.js';
 
 export const towerPurchaseHandler = ({ socket, payload }) => {
   try {
-    console.log(`C2STowerPurchase 작동 완료.`);
     const x = payload.x;
     const y = payload.y;
-    // console.log(payload);
     // 게임 클래스 불러오기
     const user = getUserBySocket(socket);
     if (!user) {
@@ -49,33 +47,6 @@ export const towerPurchaseHandler = ({ socket, payload }) => {
       y,
     };
     return postData;
-  } catch (error) {
-    handleError(socket, error);
-  }
-};
-
-export const opponentTowerAttackNotificationHandler = ({ socket, payload }) => {
-  try {
-    // console.log(payload);
-    // 게임 클래스 불러오기
-    const user = getUserBySocket(socket);
-    if (!user) {
-      throw new CustomError(
-        ErrorCodes.USER_NOT_FOUND,
-        '유저를 찾을 수 없습니다: towerPurchaseHandler',
-        socket.sequence,
-      );
-    }
-    const gameSession = getGameSession(user.gameSessionId);
-    if (!gameSession) {
-      throw new CustomError(
-        ErrorCodes.GAME_NOT_FOUND,
-        '게임 세션을 찾을 수 없습니다: towerPurchaseHandler',
-        socket.sequence,
-      );
-    }
-    // 어택 메서드 실행
-    gameSession.opponentTowerAttackNotification(socket, payload);
   } catch (error) {
     handleError(socket, error);
   }

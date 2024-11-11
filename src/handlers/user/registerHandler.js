@@ -4,8 +4,6 @@ import DatabaseManager from '../../classes/managers/databaseManager.js';
 import bcrypt from 'bcrypt';
 
 export const registerHandler = async ({ socket, payload }) => {
-  console.log(`registHandler 작동 완료.`);
-
   let registerResponsePayloadData = {};
 
   // 비밀번호 해시화
@@ -34,6 +32,5 @@ export const registerHandler = async ({ socket, payload }) => {
     socket.sequence,
   );
 
-  // console.log(`registerResponsePayloadData ${registerResponsePayloadData}`);
   socket.write(registerResponsePacket);
 };

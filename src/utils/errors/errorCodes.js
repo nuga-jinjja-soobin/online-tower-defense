@@ -1,4 +1,4 @@
-/** 클라이언트에 보낼 에러 코드들에 대한 스크립트 */
+/** 서버에서 사용할 에러 코드들에 대한 스크립트 */
 export const ErrorCodes = {
   SOCKET_ERROR: 10000,
   CLIENT_VERSION_MISMATCH: 10001,
@@ -12,5 +12,10 @@ export const ErrorCodes = {
   GAME_NOT_FOUND: 10009,
   UNKNOWN_PROTOTYPE_NAME: 10010,
   DUPLICATED_USER_CONNECT: 10011,
+  DB_QUERY_ERROR: 10012,
+  UNKNOWN_PROCESS_ERROR: 10013,
+  HANDLER_ERROR: 10014,
+  PROTOBUF_ERROR: 10015,
+
   // 추가적인 에러 코드들
 };

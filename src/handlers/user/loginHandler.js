@@ -11,8 +11,6 @@ import bcrypt from 'bcrypt';
 
 export const loginHandler = async ({ socket, payload }) => {
   try {
-    console.log(`loginHandler 작동`);
-
     const { id, password } = payload;
 
     // 1. DB 유저 검증

@@ -1,9 +1,10 @@
 // 특정 핸들러 동작 이후 자동으로 후속 작업을 수행하도록 관리하는 매니저
-// 핸들러 동작이 끝나면 처리되도록 하고 싶음.. onData => await handler({socket, data}) 이후
 
 import { PACKET_TYPE } from '../../constants/header.js';
 import { getGameSession } from '../../sessions/gameSession.js';
 import { getUserBySocket } from '../../sessions/userSessions.js';
+import CustomError from '../../utils/errors/customError.js';
+import { ErrorCodes } from '../../utils/errors/errorCodes.js';
 import { createSyncData } from '../../utils/game/data/createGameData.js';
 import { createResponse } from '../../utils/packet/response/createResponse.js';
 
@@ -37,7 +38,6 @@ class PostProcessManager {
       case 1:
         // 후속처리 유형 1: 상태 동기화 패킷 전송
         const syncNotiData = createSyncData(socket);
-        // console.log(`${socket.userId}의 syncNotiData: `, syncNotiData);
         const syncPacket = createResponse(
           PACKET_TYPE.STATE_SYNC_NOTIFICATION,
           syncNotiData,
@@ -61,7 +61,10 @@ class PostProcessManager {
         opponentUser.socket.write(ResponsePacket);
         break;
       default:
-        console.log(`후속처리 유형 ${processType}이 등록되어 있지 않습니다.`);
+        throw new CustomError(
+          ErrorCodes.UNKNOWN_PROCESS_ERROR,
+          `후속처리 유형 ${processType}이 등록되어 있지 않습니다`,
+        );
         break;
     }
   }

@@ -1,6 +1,6 @@
 /** 패킷 헤더에 대해 정의된 파일 */
-export const TOTAL_HEADER_LENGTH = 12; // 헤더의 전체 길이 2 + 1 + 1 + 4 + 4
-export const PACKET_TYPE_LENGTH = 2; // 패킷 타입의 길이
+export const TOTAL_HEADER_LENGTH = 12;
+export const PACKET_TYPE_LENGTH = 2;
 export const VERSION_LENGTH = 1;
 export const SEQUENCE_LENGTH = 4;
 export const PAYLOAD_LENGTH = 4;

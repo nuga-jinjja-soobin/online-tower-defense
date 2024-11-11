@@ -4,6 +4,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import protobuf from 'protobufjs';
 import { packetNames } from '../protobufs/packetNames.js';
+import CustomError from '../utils/errors/customError.js';
+import { ErrorCodes } from '../utils/errors/errorCodes.js';
 
 // 현재 파일의 절대 경로. 이 경로는 파일의 이름을 포함한 전체 경로
 const __filename = fileURLToPath(import.meta.url);
@@ -58,7 +60,7 @@ export const loadProtos = async () => {
 
     console.log('Protobuf 파일 로드 완료');
   } catch (err) {
-    console.error(`Protobuf 파일 로드 중 오류 발생 : ${err}`);
+    throw new CustomError(ErrorCodes.PROTOBUF_ERROR, `Protobuf 파일 로드 중 오류 발생 : ${err}`);
   }
 };
 

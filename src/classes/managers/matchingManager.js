@@ -1,6 +1,3 @@
-// 매치메이킹 싱글톤으로 서버는 하나만 존재할 예정 => 유저가 한 곳에 모두 모여야 하기 때문
-// 서버 초기화 시, 매칭메이킹 전용 클래스를 생성
-
 import { v4 as uuidv4 } from 'uuid';
 import { addGameSession, findWaitingGameSessions } from '../../sessions/gameSession.js';
 import { USER_STATE } from '../../constants/state.js';
@@ -37,14 +34,11 @@ class Match {
   }
 
   // 유저 매칭
-  // USER_STATE 가 MATCHING 상태인 유저들 확인 (본인 제외)
-  // 매칭된 유저가 없다면 매칭루프가 계속 이루어져야 함.
   async startMatchingLoop() {
     this.matchingLoopRunning = true;
 
     while (this.users.length > 0) {
       for (const user of this.users) {
-        // 복사본을 사용하여 안전하게 루프 돌기
         if (user.state === USER_STATE.MATCHING) {
           const matchedUser = this.findmatchedUser(user);
 
@@ -54,9 +48,6 @@ class Match {
             if (!gameSession) {
               const gameId = uuidv4();
               gameSession = addGameSession(gameId);
-              console.log(`새로운 게임 세션 생성: ${gameId}`);
-            } else {
-              console.log(`남아있는 방 세션: ${gameSession.id}`);
             }
 
             user.state = USER_STATE.INGAME;

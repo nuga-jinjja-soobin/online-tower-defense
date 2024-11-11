@@ -1,19 +1,17 @@
 /** 핸들러 매핑을 위한 스크립트 */
 
 import { PACKET_TYPE } from '../constants/header.js';
-// import { initialHandler } from './user/initial.handler.js';
 import { registerHandler } from './user/registerHandler.js';
 import CustomError from '../utils/errors/customError.js';
 import { ErrorCodes } from '../utils/errors/errorCodes.js';
 import { loginHandler } from './user/loginHandler.js';
 import { matchHandler } from './game/matchHandler.js';
-import { enemyMonsterDeathNotification, spawnMonsterHandler } from './monster/monsterHandler.js';
+import { monsterDeathHandler } from './monster/deathMonsterHandler.js';
+import { spawnMonsterHandler } from './monster/spawnMonsterHandler.js';
 import { gameEndHandler } from './game/gameEndHandler.js';
-import {
-  opponentTowerAttackNotificationHandler,
-  towerPurchaseHandler,
-} from './tower/towerHandler.js';
-import { updateBaseHPNotification } from './base/baseHandler.js';
+import { towerAttackHandler } from './tower/towerAttackHandler.js';
+import { towerPurchaseHandler } from './tower/towerPurchaseHandler.js';
+import { monsterAttackBaseHandler } from './base/monsterAttackBaseHandler.js';
 
 const handlers = {
   [PACKET_TYPE.REGISTER_REQUEST]: {
@@ -37,7 +35,7 @@ const handlers = {
     protoType: 'combat.C2STowerPurchaseRequest',
   },
   [PACKET_TYPE.TOWER_ATTACK_REQUEST]: {
-    handler: opponentTowerAttackNotificationHandler,
+    handler: towerAttackHandler,
     protoType: 'combat.C2STowerAttackRequest',
   },
   [PACKET_TYPE.GAME_END_REQUEST]: {
@@ -45,17 +43,16 @@ const handlers = {
     protoType: 'gameEvent.C2SGameEndRequest',
   },
   [PACKET_TYPE.MONSTER_ATTACK_BASE_REQUEST]: {
-    handler: updateBaseHPNotification,
+    handler: monsterAttackBaseHandler,
     protoType: 'combat.C2SMonsterAttackBaseRequest',
   },
   [PACKET_TYPE.MONSTER_DEATH_NOTIFICATION]: {
-    handler: enemyMonsterDeathNotification,
+    handler: monsterDeathHandler,
     protoType: 'gameEvent.C2SMonsterDeathNotification',
   },
 };
 
 export const getHandlerByPacketType = (PacketType) => {
-  // console.log(PacketType);
   if (!handlers[PacketType]) {
     throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, '핸들러 아이디를 찾을 수 없습니다.');
   }

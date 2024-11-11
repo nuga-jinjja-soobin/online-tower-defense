@@ -22,7 +22,6 @@ export const createUserInitialData = async (gameData, userId) => {
     highScore: user.highScore,
     base: gameData[userId].base,
   };
-  // console.log(`${userId}의 초기데이터: `, gameData[userId]);
 };
 
 // 사용자의 gameData를 생성하는 함수
@@ -87,7 +86,6 @@ export const createSyncData = (socket) => {
     const tower = gameSession.gameData[socket.userId].towers[i].getTowerData();
     towerData.push(tower);
   }
-  // console.log(gameSession.gameData[userId].monsters);
   let monsterData = [];
   for (let i in gameSession.gameData[socket.userId].monsters) {
     const monster = gameSession.gameData[socket.userId].monsters[i].getMonsterData();
