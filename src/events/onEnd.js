@@ -2,18 +2,17 @@ import { getUserBySocket } from '../sessions/userSessions.js';
 import { getGameSession } from '../sessions/gameSession.js';
 import { removeUser } from '../sessions/userSessions.js';
 import { USER_STATE } from '../constants/state.js';
-import DatabaseManager from '../managers/databaseManager.js';
-import { createResponse } from '../utils/response/createResponse.js';
+import DatabaseManager from '../classes/managers/databaseManager.js';
+import { createResponse } from '../utils/packet/response/createResponse.js';
 import { PACKET_TYPE } from '../constants/header.js';
+import CustomError from '../utils/errors/customError.js';
+import { ErrorCodes } from '../utils/errors/errorCodes.js';
 
 // 접속 해제 시 시퀀스
 export const onEnd = (socket) => async () => {
-  console.log('클라이언트 연결이 종료되었습니다.');
-
   // 서버와 접속이 끊긴 유저를 찾는다.
   const disconnectUser = getUserBySocket(socket);
   if (!disconnectUser) {
-    console.log('게임 끝난 유저를 못 찾음');
     return;
   }
 
@@ -21,17 +20,15 @@ export const onEnd = (socket) => async () => {
 
   do {
     // 접속 끊긴 대상의 gameSession이 없다면 나감
-    if(disconnectUser.gameSessionId === null)
-    {
+    if (disconnectUser.gameSessionId === null) {
       break;
     }
-    
+
     // 유저가 게임중
     if (disconnectUser.state === USER_STATE.INGAME) {
       // 접속 해제한 유저가 참여한 Game을 찾는다.
       const findGame = getGameSession(disconnectUser.gameSessionId);
       if (!findGame) {
-        console.log('게임을 못찾음');
         break;
       }
 
@@ -58,16 +55,13 @@ export const onEnd = (socket) => async () => {
           otherUser.id, // 승리한 유저
           disconnectUser.id, // 패배한 유저 ( 접속 끊은 유저 )
         );
-        console.log('패배 기록이 저장되었습니다.');
       } catch (error) {
-        console.error('패배 기록 중 에러', error);
+        throw new CustomError(ErrorCodes.HANDLER_ERROR, `핸들러 에러 발생: ${error.message}`);
       }
     } else {
       // 유저가 게임중이 아님
     }
   } while (0);
 
-  // 서버에 있는 usersession에 저장되는 user
-  // userssion에서 user를 삭제
   removeUser(socket);
 };

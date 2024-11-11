@@ -1,7 +1,7 @@
 import { config } from '../config/config.js';
 import { getHandlerByPacketType } from '../handlers/index.js';
 import { handleError } from '../utils/errors/errorHandler.js';
-import { packetParser } from '../utils/parser/packetParser.js';
+import { packetParser } from '../utils/packet/parser/packetParser.js';
 import PostProcessManager from '../classes/managers/processManager.js';
 import { validateSequence } from '../utils/socket/sequence.js';
 import CustomError from '../utils/errors/customError.js';
@@ -9,14 +9,12 @@ import { ErrorCodes } from '../utils/errors/errorCodes.js';
 
 export const onData = (socket) => async (data) => {
   if (!socket) {
-    console.error('Socket is undefined or closed.');
-    return;
+    throw new CustomError(ErrorCodes.SOCKET_ERROR, `소켓을 찾을 수 없거나 연결이 끊겼습니다.`);
   }
 
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
   const totalHeaderLength = config.packet.totalHeaderLength;
-  // console.log(socket.buffer);
 
   while (socket.buffer.length >= totalHeaderLength) {
     // 1. 패킷 타입 길이만큼 버퍼 읽을 위치 지정
@@ -42,8 +40,6 @@ export const onData = (socket) => async (data) => {
     }
 
     // 5. 패킷 시퀀스 (4 bytes)
-    // 여기서 시퀀스 검증이 필요함.
-    // 현재 소켓의 유저를 유저세션에서 검색하여 sequence 검증 확인
     const sequence = socket.buffer.readUInt32BE(offset);
     offset += config.packet.sequenceLength;
     const isValidSequence = validateSequence(socket, sequence);
@@ -58,17 +54,10 @@ export const onData = (socket) => async (data) => {
       // 7. 페이로드 (payloadLength bytes)
       const payloadBuffer = socket.buffer.subarray(offset, offset + payloadLength);
 
-      console.log(`Packet Type: ${packetType}`);
-      console.log(`Version Length: ${versionLength}`);
-      console.log(`Version: ${version}`);
-      console.log(`Sequence: ${sequence}`);
-      console.log(`Payload Length: ${payloadLength}`);
-      console.log(`payload: `, payloadBuffer);
       try {
         const { payload } = packetParser(payloadBuffer);
 
         socket.buffer = socket.buffer.subarray(offset + payloadLength);
-        console.log(packetType, payload);
         const handler = getHandlerByPacketType(packetType);
         const data = await handler({ socket, payload });
 

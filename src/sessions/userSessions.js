@@ -4,7 +4,6 @@ import { userSessions } from './sessions.js';
 export const addUser = (socket, id) => {
   const user = new User(socket, id);
   userSessions.push(user);
-  //   console.log(`유저 세션 추가 후 접속한 유저 현황: `, userSessions);
   return user;
 };
 
