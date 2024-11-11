@@ -3,6 +3,7 @@ export const USER_STATE = {
   STAY: 0,
   MATCHING: 1,
   INGAME: 2,
+  DISCONNECTED: 3,
 };
 
 export const GAME_STATE = {

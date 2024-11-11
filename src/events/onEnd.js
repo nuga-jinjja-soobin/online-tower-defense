@@ -24,6 +24,10 @@ export const onEnd = (socket) => async () => {
       break;
     }
 
+    if (disconnectUser.state === USER_STATE.MATCHING) {
+      disconnectUser.state = USER_STATE.DISCONNECTED;
+    }
+
     // 유저가 게임중
     if (disconnectUser.state === USER_STATE.INGAME) {
       // 접속 해제한 유저가 참여한 Game을 찾는다.
