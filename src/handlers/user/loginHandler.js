@@ -49,6 +49,10 @@ export const loginHandler = async ({ socket, payload }) => {
     const userJWT = JWT.sign(user, config.jwt.key, { expiresIn: config.jwt.expires });
     socket.token = userJWT;
 
+    // 5. 마지막 접속 기록
+    await DatabaseManager.GetInstance().updateUserLogin(id);
+
+    // 응답 패킷 생성
     const successPayloadData = {
       success: true,
       message: 'Login Success.',
@@ -56,7 +60,6 @@ export const loginHandler = async ({ socket, payload }) => {
       failCode: 0,
     };
 
-    // 응답 패킷 생성
     const loginResponsePacket = createResponse(
       PACKET_TYPE.LOGIN_RESPONSE,
       successPayloadData,
