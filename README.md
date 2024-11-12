@@ -1,9 +1,5 @@
 # online-tower-defense
 
-챕터 5. 온라인 타워 멀티 디펜스 프로젝트
-
-# tower-defense
-
 [팀스파르타 Node.js 6기] 5챕터 팀 프로젝트 - 온라인 타워 디펜스
 
 ## Preview
