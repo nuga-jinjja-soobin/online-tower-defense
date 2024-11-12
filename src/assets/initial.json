@@ -1,0 +1,13 @@
+{
+  "name": "initial",
+  "version": "1.0.0",
+  "data": {
+    "baseHp": 100,
+    "towerCost": 1000,
+    "initalGold": 3000,
+    "monsterSpawnInterval": 2,
+    "initialTowerCount": 2,
+    "score": 0,
+    "monsterLevel": 1
+  }
+}

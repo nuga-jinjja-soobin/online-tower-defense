@@ -8,7 +8,7 @@
  * 2. header.js
  */
 
-import { PORT, HOST, CLIENT_VERSION } from '../constants/env.js';
+import { PORT, HOST, CLIENT_VERSION, JWT_KEY, JWT_EXPIRES } from '../constants/env.js';
 import {
   PACKET_TYPE_LENGTH,
   TOTAL_HEADER_LENGTH,
@@ -60,5 +60,9 @@ export const config = {
       port: DB2_PORT,
     },
     // 필요한 만큼 추가
+  },
+  jwt: {
+    key: JWT_KEY,
+    expires: JWT_EXPIRES,
   },
 };

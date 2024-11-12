@@ -1,28 +1,18 @@
-class User {
-  constructor(id, sequence) {
+import { USER_STATE } from '../../constants/state.js';
+
+export class User {
+  constructor(socket, id) {
+    this.socket = socket;
     this.id = id;
-    this.sequence = sequence;
+    this.gameSessionId = '';
+    this.state = USER_STATE.STAY;
   }
 
-  incrementSequence() {
-    this.sequence++;
+  loginedUser(id) {
+    this.id = id;
   }
 
-  validateSequence(reciveSequence) {
-    const expectedSequence = this.sequence + 1;
-    if (expectedSequence === reciveSequence) {
-      this.sequence = reciveSequence;
-      return true;
-    }
-
-    // 패킷이 중복되었는지 검증
-    else if (reciveSequence < expectedSequence) {
-      return false;
-    }
-
-    // 패킷이 누락되었는지 검증
-    else {
-      return false;
-    }
+  onMatching() {
+    this.state = USER_STATE.MATCHING;
   }
 }

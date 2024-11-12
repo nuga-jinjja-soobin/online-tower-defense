@@ -7,13 +7,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "client": "node client/dummyClient.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "long": "^5.2.3",
     "mysql2": "^3.11.3",
